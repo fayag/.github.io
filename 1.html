@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پورتفولیوی جامع و ممیزی علمی اختراعات | مهندس فایق آزور</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #020617;
+            --surface-color: #0f172a;
+            --border-color: #1e293b;
+            --accent-blue: #0ea5e9;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+        }
+
+        body {
+            font-family: 'Vazirmatn', Tahoma, sans-serif;
+            background-color: var(--bg-color);
+            color: #f8fafc;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .en-text { font-family: 'Inter', sans-serif; direction: ltr; display: inline-block; }
+        
+        .nav-link {
+            position: relative; padding: 0.5rem 0; font-weight: 500; color: #94a3b8; transition: color 0.3s; cursor: pointer;
+        }
+        .nav-link:hover, .nav-link.active { color: var(--accent-blue); }
+        .nav-link::after {
+            content: ''; position: absolute; bottom: 0; right: 0; width: 0%; height: 2px; background: var(--accent-blue); transition: width 0.3s;
+        }
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(56, 189, 248, 0.15);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .glass-card:hover { border-color: rgba(56, 189, 248, 0.4); transform: translateY(-3px); }
+
+        #modal-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(2, 6, 23, 0.95); z-index: 100; backdrop-filter: blur(8px);
+        }
+        .modal-content { max-height: 90vh; overflow-y: auto; }
+        
+        .math-box {
+            direction: ltr; text-align: left; font-family: 'Inter', monospace;
+            background: #020617; border-left: 4px solid var(--accent-emerald);
+            padding: 12px 16px; border-radius: 6px; font-size: 0.85rem; color: #a7f3d0; margin: 10px 0;
+        }
+
+        .canvas-container {
+            position: relative; width: 100%; aspect-ratio: 16/9; background: #020617; border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden;
+        }
+        canvas { display: block; width: 100%; height: 100%; }
+        
+        .section-tab { display: none; animation: fadeIn 0.4s ease-out forwards; }
+        .section-tab.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="sticky top-0 z-50 bg-slate-950/85 backdrop-blur-md border-b border-slate-800 shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-sky-500 to-emerald-500 flex items-center justify-center text-slate-950 font-black text-xl">FA</div>
+                <div class="font-black text-lg tracking-tight hidden sm:block">Fayag<span class="text-sky-400">Azure</span></div>
+            </div>
+            
+            <nav class="flex space-x-4 space-x-reverse text-sm sm:text-base">
+                <a onclick="showTab('home')" class="nav-link active" id="nav-home">داشبورد</a>
+                <a onclick="showTab('science')" class="nav-link" id="nav-science">ممیزی فیزیک (چالش)</a>
+                <a onclick="showTab('products')" class="nav-link" id="nav-products">فناوری‌ها و انیمیشن</a>
+                <a onclick="showTab('about')" class="nav-link" id="nav-about">رزومه</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mb-20">
+
+        <section id="tab-home" class="section-tab active">
+            <div class="glass-card p-8 lg:p-12 mb-8 border-t-4 border-sky-500 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-sky-900/20 via-slate-900/0 to-slate-900/0 pointer-events-none"></div>
+                <div class="grid lg:grid-cols-12 gap-10 relative z-10">
+                    <div class="lg:col-span-7">
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-3 py-1 rounded-full text-xs font-bold en-text">WIPO PCT/IB2026/059583</span>
+                            <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-3 py-1 rounded-full text-xs font-bold">PatSnap 100% Novelty</span>
+                        </div>
+                        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black leading-tight mb-5">
+                            انقلاب صنعتی جابه‌جایی سیالات:<br>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-l from-sky-400 to-emerald-400">جابه‌جایی مثبت نوسانی-پالسی</span>
+                        </h1>
+                        <p class="text-slate-300 text-lg leading-relaxed text-justify mb-6">
+                            پایان عصر ۱۴۰ ساله فن‌های دوار. گذار قطعی از اتلاف ۸۰ درصدیِ آیرودینامیک چرخشی، به معماری <strong>اثر پیستونی و بازگشت گرانشی</strong>. کاهش مستندِ مصرف برق تا <strong>۹۰٪</strong>، حذف کامل پروانه و الکتروموتورهای دائم‌کار.
+                        </p>
+                        <div class="flex flex-wrap gap-3">
+                            <button onclick="showTab('science')" class="bg-sky-500 hover:bg-sky-400 text-slate-950 font-black py-3 px-6 rounded-xl transition shadow-[0_0_15px_rgba(14,165,233,0.4)]">
+                                چالش جهانی 15,000 دلاری
+                            </button>
+                            <button onclick="showTab('products')" class="bg-slate-800 hover:bg-slate-700 text-white border border-slate-600 font-bold py-3 px-6 rounded-xl transition">
+                                مشاهده اختراعات و انیمیشن
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="lg:col-span-5">
+                        <div class="bg-slate-950 p-6 rounded-2xl border border-slate-800 h-full flex flex-col justify-center">
+                            <h3 class="text-sky-400 font-bold mb-4 flex items-center gap-2"><i class="fa-solid fa-file-invoice-dollar"></i> مستندات عملی کاهش هزینه (قبض برق)</h3>
+                            <div class="space-y-4">
+                                <div class="p-4 rounded-xl border border-rose-500/30 bg-rose-950/20">
+                                    <div class="text-xs text-rose-300 mb-1">دوره خرداد و تیر (سیستم فن دوار):</div>
+                                    <div class="flex justify-between items-end">
+                                        <span class="font-mono text-xl text-white en-text">1,920 kWh</span>
+                                        <span class="font-bold text-rose-400">۱۴,۷۰۱,۸۰۰ تومان</span>
+                                    </div>
+                                </div>
+                                <div class="p-4 rounded-xl border border-emerald-500/30 bg-emerald-950/20 relative overflow-hidden">
+                                    <div class="absolute right-0 top-0 h-full w-1 bg-emerald-500"></div>
+                                    <div class="text-xs text-emerald-300 mb-1">دوره مرداد و شهریور (اوج گرما با سامانه آزور):</div>
+                                    <div class="flex justify-between items-end">
+                                        <span class="font-mono text-xl text-white en-text">840 kWh</span>
+                                        <span class="font-bold text-emerald-400">۱,۳۶۰,۳۰۰ تومان</span>
+                                    </div>
+                                    <div class="mt-2 pt-2 border-t border-emerald-500/20 text-xs text-emerald-200 font-bold text-center">
+                                        ۹۰٪ کاهش هزینه ریالی | ۵۶٪ کاهش مطلق کیلووات‌ساعت
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="glass-card p-5 text-center">
+                    <div class="text-2xl font-black text-emerald-400 en-text">15 Watts</div>
+                    <div class="text-xs font-bold text-slate-300 mt-2">کار خالص سیال در 1000 CFM</div>
+                </div>
+                <div class="glass-card p-5 text-center">
+                    <div class="text-2xl font-black text-sky-400 en-text">8 m/s²</div>
+                    <div class="text-xs font-bold text-slate-300 mt-2">شتاب پیستونی بال مکشی</div>
+                </div>
+                <div class="glass-card p-5 text-center">
+                    <div class="text-2xl font-black text-amber-400 en-text">0 X / 0 Y</div>
+                    <div class="text-xs font-bold text-slate-300 mt-2">گزارش ممیزی نوآوری PatSnap</div>
+                </div>
+                <div class="glass-card p-5 text-center">
+                    <div class="text-2xl font-black text-purple-400 en-text">100%</div>
+                    <div class="text-xs font-bold text-slate-300 mt-2">تطابق با ترمودینامیک</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab-science" class="section-tab">
+            <div class="glass-card p-6 md:p-10 border-t-4 border-amber-500 mb-8">
+                <h2 class="text-2xl sm:text-3xl font-black mb-6 text-white flex items-center gap-3">
+                    <i class="fa-solid fa-scale-balanced text-amber-500"></i> چالش جهانی ۱۵,۰۰۰ دلاری مهندسی فیزیک
+                </h2>
+                
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-sky-400 font-bold mb-3 text-lg">۱. مبانی فیزیکی: معمای ۱۰۰۰ CFM با باتری ۱۵ وات‌ساعت</h3>
+                        <p class="text-slate-300 text-sm leading-relaxed text-justify mb-4">
+                            توان خالص فیزیکی لازم برای جابجایی هوا از معادله $P_{fluid} = Q \times \Delta P$ به دست می‌آید. برای عبور ۱۰۰۰ فوت مکعب در دقیقه ($0.47\text{ m}^3/\text{s}$) از پد سلولزی با افت فشار $30$ تا $35\text{ Pa}$، تنها <strong>۱۵ تا ۱۷ وات کار فیزیکی خالص</strong> نیاز است.
+                        </p>
+                        <div class="math-box">
+                            Q = 1000 CFM ≈ 0.47 m³/s <br>
+                            ΔP = 35 Pa (Wet Cellulose Pad) <br>
+                            P_fluid = 0.47 × 35 ≈ 16.45 Watts
+                        </div>
+                        <p class="text-slate-300 text-sm leading-relaxed text-justify mt-4">
+                            <strong>مشکل فن‌های دوار (Aerodynamic Stall):</strong> پنکه‌های سقفی یا BLDC فقط در فضای آزاد ($\Delta P = 0$) کم‌مصرف‌اند. در اتاق بسته مجهز به پد، فشار استاتیک منفی ایجاد شده و هوا روی پره‌های شیب‌دار سُر می‌خورد (واماندگی). راندمان فن به ۱۰٪ سقوط کرده و برای تأمین ۱۶ وات کار مفید، موتور مجبور است ۲۰۰ تا ۳۰۰ وات برق مصرف کند و باتری ۱۵ وات‌ساعتی در چند دقیقه تخلیه می‌شود.
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-900 border border-slate-700 rounded-2xl p-6">
+                        <h3 class="text-emerald-400 font-bold mb-4 text-lg border-b border-slate-800 pb-2">شرایط چالش (The $15,000 Challenge)</h3>
+                        <ul class="space-y-3 text-sm text-slate-300">
+                            <li class="flex gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1"></i> <strong>هدف:</strong> خروج مداوم $1000\text{ CFM}$ هوا به مدت ۱۰ دقیقه از اتاقی که ورودی آن کاملاً با پد سلولزی کیپ شده است.</li>
+                            <li class="flex gap-2"><i class="fa-solid fa-battery-quarter text-amber-500 mt-1"></i> <strong>محدودیت انرژی:</strong> تنها منبع تغذیه مجاز برای شما، یک باتری کوچک $15\text{ Wh}$ (۱۵ وات‌ساعت) است.</li>
+                            <li class="flex gap-2"><i class="fa-solid fa-fan text-rose-500 mt-1"></i> <strong>ابزار شما:</strong> استفاده از هر نوع فن چرخشی (محوری، سانتریفیوژ، BLDC).</li>
+                        </ul>
+                        <div class="mt-6 p-4 bg-amber-950/30 border border-amber-500/50 rounded-xl text-amber-200 text-sm text-justify">
+                            فن‌های متعارف زیر این فشارِ استاتیک، باتری را در ۲ دقیقه نابود می‌کنند. اما <strong>پلتفرم نوسانی-پالسی ما (بدون پروانه دوار)</strong> با همین باتری بیش از ۴۵ دقیقه کار می‌کند. اگر معتقدید فن‌های چرخشی قادر به عبور از این سد آیرودینامیکی هستند، جایزه ۱۰ میلیارد ریالی در انتظار شماست.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8 mb-8">
+                <div class="glass-card p-6 border-t-4 border-indigo-500">
+                    <h3 class="text-indigo-400 font-bold mb-4 text-lg">تحلیل گزارش جهانی PatSnap (WIPO & USPTO)</h3>
+                    <p class="text-slate-300 text-sm leading-relaxed text-justify mb-4">
+                        طی ۲۸ راند جستجوی معنایی در ۱۰۰ پتنت جهانی (از غول‌هایی نظیر Boeing، Airbus، RTX Corp)، هوش مصنوعی PatSnap ویژگی‌های اصلی اختراع ما را با علامت " - " (نوآوری مطلق) نشانه‌گذاری کرد:
+                    </p>
+                    <ul class="space-y-2 text-sm text-slate-400 list-disc list-inside">
+                        <li><strong>Feature e:</strong> شلیک بال با شتاب خطی $\ge 8\text{ m/s}^2$ برای ایجاد اثر پیستونی.</li>
+                        <li><strong>Feature i:</strong> سینماتیک ناهمزمان دمپر و جدایش اتصال رهاشونده در اوج کورس.</li>
+                        <li><strong>Feature m:</strong> پدل کمکی زاویه‌دار در نوک بال.</li>
+                    </ul>
+                </div>
+
+                <div class="glass-card p-6 border-t-4 border-purple-500">
+                    <h3 class="text-purple-400 font-bold mb-4 text-lg">تحلیل شناختی: چرا درک این مکانیزم دشوار است؟ (TRIZ IFR)</h3>
+                    <p class="text-slate-300 text-sm leading-relaxed text-justify mb-4">
+                        این مکانیزم به قانون "نتیجه نهایی ایده‌آل (IFR)" در علم TRIZ دست یافته است: حل مشکل بدون افزودن سنسور یا موتور جدید. 
+                        درک آن نیازمند پردازش فضایی-زمانی ۴ بعدی است: 
+                        ۱. اینرسی هوای شلیک‌شده رو به بیرون.
+                        ۲. بسته شدن فوق‌سریعِ دمپرِ سبک ($I_{damper} \ll I_{wing}$).
+                        ۳. بازگشت آهسته و گرانشی بال سنگین در محیطی که خروجی آن قفل شده است و هوا را مجبور به ورود از پدها می‌کند.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab-products" class="section-tab">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-black mb-3">سبد پلتفرم‌ها و اختراعات ثبت‌شده</h2>
+                <p class="text-slate-400">شامل ۹ فناوری (ثبت ملی و پرونده‌های بین‌المللی PCT). برای مشاهده فیزیکِ عملکرد، کلیک کنید.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="products-grid">
+                <!-- Data injected via JS -->
+            </div>
+        </section>
+
+        <section id="tab-about" class="section-tab">
+            <div class="glass-card p-8 md:p-12 border-t-4 border-sky-500">
+                <div class="flex flex-col md:flex-row gap-10 items-start">
+                    <div class="flex-shrink-0 w-40 h-40 bg-slate-900 rounded-3xl flex items-center justify-center border border-slate-700 shadow-2xl">
+                        <i class="fa-solid fa-user-astronaut text-6xl text-sky-400"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <h2 class="text-3xl font-black text-white">مهندس فایق آزور</h2>
+                            <span class="bg-slate-800 text-slate-300 text-xs px-2 py-1 rounded en-text">ORCID: 0009-0006-9065-3401</span>
+                        </div>
+                        <h3 class="text-sky-400 font-bold mb-6 text-lg">پژوهشگر، مهندس معدن و مخترع سیستم‌های ترمودینامیکی</h3>
+                        
+                        <div class="space-y-4 text-sm text-slate-300 text-justify leading-relaxed">
+                            <p>
+                                با بیش از ۲۰ سال سابقه تخصصی در طراحی ماشین‌آلات صنعتی، پژوهش و ثبت اختراعات ملی و بین‌المللی. مؤسس ماشین‌سازی زاگرس (۱۳۸۸ تا ۱۴۰۳) با سابقه طراحی و ساخت صفر تا صد بیش از ۱۰۰ خط تولید صنعتی و صادرات موفق به کشورهای ترکمنستان، جمهوری آذربایجان و عراق.
+                            </p>
+                            <p>
+                                عضو پیوسته <strong>بنیاد ملی نخبگان ایران</strong>، عضو انجمن ملی مخترعین و مسئول فنی در نظام مهندسی معدن (از سال ۱۳۸۳). تمرکز اصلی من بر روی حل بنیادی چالش‌های انرژی در مکانیک سیالات و حرارت است.
+                            </p>
+                        </div>
+                        
+                        <div class="grid sm:grid-cols-2 gap-6 mt-8 pt-6 border-t border-slate-800">
+                            <div>
+                                <h4 class="font-bold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-graduation-cap text-sky-500"></i> تحصیلات و تخصص‌ها</h4>
+                                <ul class="space-y-2 text-sm text-slate-400">
+                                    <li>• کارشناسی مهندسی اکتشاف معدن (معدل ۱۵.۷۰، پایان‌نامه ۱۹)</li>
+                                    <li>• تسلط کامل (۱۰۰٪) به زبان‌های انگلیسی و ترکی استانبولی</li>
+                                    <li>• برنامه‌نویسی پیشرفته: C++, Python, MATLAB</li>
+                                    <li>• طراحی صنعتی و تحلیل با AutoCAD</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-address-book text-emerald-500"></i> ارتباط جهت سرمایه‌گذاری</h4>
+                                <ul class="space-y-3 text-sm text-slate-400">
+                                    <li class="flex items-center gap-3"><i class="fa-solid fa-envelope w-5"></i> <span class="en-text text-sky-300">fayagazure@gmail.com</span></li>
+                                    <li class="flex items-center gap-3"><i class="fa-brands fa-linkedin w-5"></i> <span class="en-text text-sky-300">linkedin.com/in/fayeghazour</span></li>
+                                    <li class="flex items-center gap-3"><i class="fa-brands fa-instagram w-5"></i> <span class="en-text text-sky-300">@iraninventors</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="modal-overlay">
+        <div class="absolute inset-4 md:inset-10 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+            <div class="flex justify-between items-center p-4 border-b border-slate-800 bg-slate-950/80">
+                <h3 id="modal-title" class="text-xl font-black text-sky-400">...</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-rose-500 transition px-4 py-2">
+                    <i class="fa-solid fa-times text-2xl"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-4 md:p-8 modal-content grid lg:grid-cols-12 gap-8">
+                <div class="lg:col-span-7">
+                    <div class="canvas-container shadow-inner">
+                        <canvas id="anim-canvas"></canvas>
+                        <div class="absolute top-3 left-3 bg-slate-900/80 px-3 py-1.5 rounded-lg text-xs font-mono text-emerald-400 border border-emerald-500/30 flex items-center gap-2">
+                            <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span></span> Live Simulation
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:col-span-5 flex flex-col">
+                    <div class="mb-4" id="modal-badges"></div>
+                    <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 flex-grow">
+                        <h4 class="font-bold text-amber-400 mb-3 border-b border-slate-800 pb-2">مکانیزم و ادعانامه علمی</h4>
+                        <p class="text-sm text-slate-300 leading-relaxed text-justify" id="modal-desc"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data Base of 9 Inventions (Including the new High-Temp Cyclone)
+        const inventionsData = [
+            { id: 'wing', icon: 'fa-fan', reg: '۱۱۳۵۹۹ | PCT/IB2026/059583', title: 'کولر تبخیری با بال مکشی خودپمپاژ',
+              desc: 'حذف کامل پروانه دوار. پرتاب پالسی بال مکشی با شتاب حداقل $8 m/s^2$ برای ایجاد اثر پیستونی. در فاز برگشت، جریان برق کاملاً قطع شده و گرانش زمین بال را برمی‌گرداند. انرژی جنبشیِ بازگشت گرانشی، پمپ آب مکانیکی را بدون مصرف برق به کار می‌اندازد. دارای تاییدیه عدم وجود مشابه در PatSnap.', 
+              color: '#38bdf8' },
+            { id: 'cradle', icon: 'fa-scale-unbalanced', reg: '۱۱۳۷۶۱', title: 'سامانه تهویه گهواره‌ای منشوری',
+              desc: 'یک پانل آیرودینامیک در محفظه منشوری حول محور میانی نوسان می‌کند. در یک حرکت واحد، هوای تازه را از پد سلولزی یک سمت می‌مکد و هوای محبوس را از سمت دیگر با فشار خارج می‌کند. ممیزی شده با کار خالص سیال $P_{fluid}=Q \\times \\Delta P$.',
+              color: '#10b981' },
+            { id: 'watergen', icon: 'fa-droplet', reg: '۱۱۳۸۴۸', title: 'تولید نوسانی آب از هوا',
+              desc: 'حذف کمپرسور، کندانسور و فن برقی مستقل. یک هسته نوسانی چهار عملکرد (جریان هوا، جذب رطوبت، آزادسازی بخار و میعان) را به تنهایی انجام می‌دهد. میعان صرفاً با برخورد آیرودینامیکی قطرات روی پره‌های خنک‌شونده غیرفعال رخ می‌دهد.',
+              color: '#3b82f6' },
+            { id: 'cyclone', icon: 'fa-fire-burner', reg: 'New', title: 'سامانه پخت همرفتی و سایکلون پالسی',
+              desc: 'جلوگیری از ذوب پروانه‌ها در دمای ۵۰۰ درجه زغال. عملگر نوسانی در فاصله دور قرار داشته و پالس‌های مکشیِ آن، گرداب آیرودینامیکی پالسی در سایکلون ایجاد می‌کند. این شوک‌ها خاکستر را کلوخه کرده و لایه مرزی حرارتی غذا را برای پخت سریع‌تر می‌شکند.',
+              color: '#f43f5e' },
+            { id: 'forest', icon: 'fa-tree', reg: '۱۱۴۰۳۷', title: 'کپسول هوشمند اطفا و احیای جنگل',
+              desc: 'پرتاب توسط پهپاد. پوسته خارجی در حرارت ۱۵۰-۱۸۰ درجه تخریب شده و پودرهای معدنی را با مکانیزم فشار-محور (غیرانفجاری) پخش می‌کند. هسته زیست‌تخریب‌پذیر حاوی بذر و هیدروژل در خاکستر باقی مانده و جنگل را احیا می‌کند.',
+              color: '#22c55e' },
+            { id: 'pump', icon: 'fa-pump-medical', reg: '۱۱۲۸۵۹ | PCT/IR2025/050020', title: 'پمپ دوجزئی بدون سوپاپ',
+              desc: 'تبدیل حرکت چرخشی موتور به حرکت چرخشی نوسانی محفظه‌ها. با تغییر زاویه محفظه‌ها نسبت به مجاری ورود و خروج، نیاز به سوپاپ‌های فنردار (که در سیالات چسبناک گیرپاژ می‌کنند) کاملاً حذف شده است. نسبت دو سیال کاملاً قابل تنظیم است.',
+              color: '#a855f7' },
+            { id: 'traffic', icon: 'fa-car-burst', reg: '۱۱۳۳۷۱ | PCT/IB2025/059099', title: 'تشخیص ترافیک با خوانش مغناطیسی',
+              desc: 'جایگزین ارزان برای دوربین‌ها. پدال‌های حاوی سنسورهای ریدسوییچ و پیزوالکتریک در کف جاده نصب می‌شوند. با عبور لاستیک، تفاوت زمان فشرده شدنِ ردیف‌ها، سرعت، سبقت غیرمجاز و حرکت خلاف را مستقل از شرایط جوی (مه و برف) محاسبه می‌کند.',
+              color: '#f59e0b' },
+            { id: 'pressure', icon: 'fa-ruler-horizontal', reg: '۱۱۳۹۹۱', title: 'حسگر نواری فشار قابل برش',
+              desc: 'نواری چندلایه حاوی دی‌الکتریک فوم الاستومر که می‌توان آن را با قیچی برید و از هر نقطه‌ای استفاده کرد. دارای اتصال الکتریکی غیرقطبی و المان‌های محافظ قوسی که پاسخ کاملاً خطی به فشردگی می‌دهد.',
+              color: '#06b6d4' },
+            { id: 'magnetic', icon: 'fa-magnet', reg: '۱۱۳۷۷۰', title: 'پالایش مغناطیسی مستقیم آب',
+              desc: 'آب به عنوان لایه‌ای نازک، مستقیماً و بدون عبور از لوله پلاستیکی (که مانع نفوذ میدان است)، از لابه‌لای ماتریس شطرنجی آهنرباها عبور می‌کند. کارایی فوق‌العاده برای توقف رسوب‌گذاری در آب‌های کشاورزی و صنعتی با سختی و EC بسیار بالا.',
+              color: '#6366f1' }
+        ];
+
+        // System State
+        const AppState = {
+            time: 0,
+            activeTab: 'home',
+            activeModalId: null
+        };
+
+        // DOM Elements
+        const canvas = document.getElementById('anim-canvas');
+        const ctx = canvas.getContext('2d');
+        const modal = document.getElementById('modal-overlay');
+
+        // Initialization
+        function init() {
+            // Render Grid
+            const grid = document.getElementById('products-grid');
+            inventionsData.forEach((inv, index) => {
+                grid.innerHTML += `
+                    <div class="glass-card bg-slate-900/50 p-6 flex flex-col cursor-pointer group" onclick="openModal(${index})">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl transition-transform group-hover:scale-110 shadow-lg" style="background: ${inv.color}20; color: ${inv.color}; border: 1px solid ${inv.color}50;">
+                                <i class="fa-solid ${inv.icon}"></i>
+                            </div>
+                            <span class="text-[10px] font-mono px-2 py-1 rounded bg-slate-800 text-slate-400 border border-slate-700 en-text">${inv.reg}</span>
+                        </div>
+                        <h3 class="font-black text-white text-lg mb-2 group-hover:text-sky-400 transition-colors">${inv.title}</h3>
+                        <p class="text-xs text-slate-400 line-clamp-3 text-justify leading-relaxed flex-grow">${inv.desc}</p>
+                        <div class="mt-4 pt-3 border-t border-slate-800 text-xs font-bold flex items-center gap-2" style="color: ${inv.color};">
+                            <i class="fa-solid fa-play-circle"></i> نمایش انیمیشن فیزیکی
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Handle Resize
+            window.addEventListener('resize', resizeCanvas);
+            
+            // Start Animation Loop
+            requestAnimationFrame(engineLoop);
+        }
+
+        function showTab(tabId) {
+            document.querySelectorAll('.section-tab').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+            document.getElementById('nav-' + tabId).classList.add('active');
+            window.scrollTo(0, 0);
+            AppState.activeTab = tabId;
+        }
+
+        function openModal(index) {
+            const inv = inventionsData[index];
+            document.getElementById('modal-title').innerText = inv.title;
+            document.getElementById('modal-desc').innerHTML = inv.desc.replace(/(\$.*?\$)/g, '<span class="en-text text-sky-300 font-mono">$1</span>');
+            document.getElementById('modal-badges').innerHTML = `<span class="bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 px-3 py-1 rounded text-xs font-mono en-text">${inv.reg}</span>`;
+            
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            AppState.activeModalId = inv.id;
+            resizeCanvas();
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            AppState.activeModalId = null;
+        }
+
+        function resizeCanvas() {
+            if(AppState.activeModalId) {
+                const rect = canvas.parentElement.getBoundingClientRect();
+                canvas.width = rect.width;
+                canvas.height = rect.height;
+            }
+        }
+
+        // --- Core Animation Engine (100% Robust) ---
+        function engineLoop() {
+            AppState.time += 0.04;
+            
+            if (AppState.activeModalId && canvas.width > 0) {
+                renderSpecificAnimation(AppState.activeModalId);
+            }
+
+            requestAnimationFrame(engineLoop);
+        }
+
+        // Draw Helper
+        function drawLine(context, x1, y1, x2, y2, color, width) {
+            context.beginPath(); context.moveTo(x1, y1); context.lineTo(x2, y2);
+            context.strokeStyle = color; context.lineWidth = width; context.stroke();
+        }
+
+        // Physics Drawings
+        function renderSpecificAnimation(id) {
+            const w = canvas.width;
+            const h = canvas.height;
+            const t = AppState.time;
+            
+            ctx.clearRect(0, 0, w, h);
+            ctx.save();
+            ctx.translate(w/2, h/2);
+            
+            // Auto-scale to fit canvas
+            const scale = Math.min(w, h) / 350;
+            ctx.scale(scale, scale);
+
+            if (id === 'wing') {
+                // Background Chamber
+                ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 4; ctx.strokeRect(-120, -100, 240, 200);
+                // Wet Pad
+                ctx.fillStyle = '#0ea5e933'; ctx.fillRect(-120, -90, 20, 180);
+                
+                // Kinematics
+                const cycle = (t * 0.5) % 1;
+                const isPulse = cycle < 0.1; // Very short pulse (10%)
+                const angle = isPulse ? (cycle/0.1)*0.6 : 0.6 - ((cycle-0.1)/0.9)*0.6;
+                
+                // Hinge
+                ctx.fillStyle = '#f8fafc'; ctx.beginPath(); ctx.arc(100, -90, 6, 0, Math.PI*2); ctx.fill();
+                
+                // Wing
+                ctx.save();
+                ctx.translate(100, -90);
+                ctx.rotate(angle);
+                drawLine(ctx, 0, 0, -200, 180, '#38bdf8', 6);
+                
+                // Actuator Pulse Indicator
+                if(isPulse) {
+                    ctx.fillStyle = '#f43f5e'; ctx.beginPath(); ctx.arc(-200, 180, 12 + Math.random()*5, 0, Math.PI*2); ctx.fill();
+                }
+                ctx.restore();
+                
+                // Text
+                ctx.fillStyle = isPulse ? '#fda4af' : '#6ee7b7';
+                ctx.font = 'bold 12px Inter'; ctx.textAlign = 'center';
+                ctx.fillText(isPulse ? "PULSE: P_elec > P_fluid" : "GRAVITY RETURN: Drives Water Pump", 0, 130);
+            }
+            else if (id === 'cradle') {
+                const angle = Math.sin(t) * 0.4;
+                // Prism Outline
+                ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 4;
+                ctx.beginPath(); ctx.moveTo(0,-120); ctx.lineTo(-120, 100); ctx.lineTo(120, 100); ctx.closePath(); ctx.stroke();
+                
+                // Cradle Panel
+                ctx.save();
+                ctx.translate(0, -120);
+                ctx.rotate(angle);
+                drawLine(ctx, 0, 0, 0, 210, '#f59e0b', 6);
+                ctx.restore();
+                
+                // Arrows showing bilateral flow
+                ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 24px Inter'; ctx.textAlign = 'center';
+                const dir = Math.cos(t) > 0 ? 1 : -1;
+                ctx.fillText(dir > 0 ? "→" : "←", -80, 20);
+                ctx.fillText(dir > 0 ? "→" : "←", 80, 20);
+                
+                ctx.fillStyle = '#f8fafc'; ctx.font = '12px Inter';
+                ctx.fillText("Simultaneous Bilateral Displacement", 0, 130);
+            }
+            else if (id === 'cyclone') {
+                // Pulsating Vortex
+                const pulseScale = 1 + 0.2 * Math.sin(t * 8);
+                ctx.strokeStyle = '#f43f5e'; ctx.lineWidth = 2;
+                
+                for(let i=0; i<5; i++) {
+                    ctx.beginPath();
+                    ctx.ellipse(0, -50 + i*30, 80 * pulseScale * (1 - i*0.15), 20, 0, 0, Math.PI*2);
+                    ctx.stroke();
+                }
+                // Ash particles aggregating
+                ctx.fillStyle = '#94a3b8';
+                for(let p=0; p<15; p++) {
+                    const py = (t*50 + p*20) % 150 - 50;
+                    const px = Math.sin(t*3 + p)*40 * (1 - (py+50)/150);
+                    ctx.beginPath(); ctx.arc(px, py, 3 + (py+50)/30, 0, Math.PI*2); ctx.fill();
+                }
+                ctx.fillStyle = '#f8fafc'; ctx.font = '12px Inter'; ctx.textAlign = 'center';
+                ctx.fillText("Pulsating Aerodynamic Agglomeration", 0, 130);
+            }
+            else if (id === 'watergen') {
+                const shift = Math.sin(t*2) * 50;
+                ctx.fillStyle = '#1e293b'; ctx.fillRect(-80 + shift, -60, 160, 120);
+                
+                ctx.fillStyle = '#38bdf8';
+                for(let i=0; i<8; i++) {
+                    const dy = (t*40 + i*25) % 150 - 75;
+                    ctx.beginPath(); ctx.arc(shift - 50 + i*15, dy, 3, 0, Math.PI*2); ctx.fill();
+                }
+                ctx.fillStyle = '#f8fafc'; ctx.font = '12px Inter'; ctx.textAlign = 'center';
+                ctx.fillText("Passive Condensation on Moving Fins", 0, 100);
+            }
+            else if (id === 'pump') {
+                const p1 = Math.sin(t*3)*40;
+                const p2 = Math.cos(t*3)*40;
+                ctx.strokeStyle = '#334155'; ctx.lineWidth=4;
+                ctx.strokeRect(-70, -60, 40, 120); ctx.strokeRect(30, -60, 40, 120);
+                
+                ctx.fillStyle = '#ef4444'; ctx.fillRect(-68, -58 + p1, 36, 116 - p1);
+                ctx.fillStyle = '#3b82f6'; ctx.fillRect(32, -58 + p2, 36, 116 - p2);
+                
+                ctx.strokeStyle = '#a855f7'; ctx.beginPath(); ctx.moveTo(-50, 70); ctx.lineTo(0, 120); ctx.lineTo(50, 70); ctx.stroke();
+                ctx.fillStyle = '#f8fafc'; ctx.font = '12px Inter'; ctx.textAlign = 'center';
+                ctx.fillText("Valveless Dual Fluid Mixing", 0, 140);
+            }
+            else if (id === 'forest') {
+                const dropY = (t*60) % 250 - 150;
+                ctx.fillStyle = '#451a03'; ctx.fillRect(-150, 60, 300, 40); // Ground
+                
+                if (dropY < 50) {
+                    ctx.fillStyle = '#f59e0b'; ctx.beginPath(); ctx.arc(0, dropY, 12, 0, Math.PI*2); ctx.fill();
+                } else {
+                    const radius = (dropY - 50) * 3;
+                    if(radius < 150) {
+                        ctx.strokeStyle = `rgba(16, 185, 129, ${1 - radius/150})`; ctx.lineWidth = 4;
+                        ctx.beginPath(); ctx.arc(0, 60, radius, 0, Math.PI*2); ctx.stroke();
+                    }
+                }
+                ctx.fillStyle = '#f8fafc'; ctx.font = '12px Inter'; ctx.textAlign = 'center';
+                ctx.fillText("Thermal Disintegration & Seed Deployment", 0, 120);
+            }
+            else if (id === 'pressure') {
+                ctx.fillStyle = '#1e293b'; ctx.fillRect(-120, -10, 240, 20);
+                const pressX = Math.sin(t*2) * 90;
+                ctx.fillStyle = '#38bdf8'; ctx.beginPath(); ctx.arc(pressX, 0, 15, 0, Math.PI*2); ctx.fill();
+                
+                ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2; ctx.beginPath();
+                for(let x=-100; x<100; x+=5) {
+                    const dist = Math.abs(x - pressX);
+                    const y = dist < 40 ? 50 - dist : 10;
+                    if(x===-100) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+                ctx.fillStyle = '#f8fafc'; ctx.font = '12px Inter'; ctx.textAlign = 'center';
+                ctx.fillText("Uniform Electrical Resistance Profile", 0, 90);
+            }
+            else {
+                // Default fallback (Magnetic / Traffic)
+                ctx.fillStyle = '#3b82f6';
+                for(let i=0; i<15; i++) {
+                    ctx.beginPath();
+                    ctx.arc(Math.sin(t*2+i)*80, Math.cos(t*1.5+i)*80, 5, 0, Math.PI*2);
+                    ctx.fill();
+                }
+                ctx.fillStyle = '#f8fafc'; ctx.font = '12px Inter'; ctx.textAlign = 'center';
+                ctx.fillText("Interactive System Dynamics...", 0, 120);
+            }
+            
+            ctx.restore();
+        }
+
+        // Initialize App
+        window.onload = init;
+    </script>
+</body>
+</html>
