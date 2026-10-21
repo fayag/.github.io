@@ -1,1920 +1,479 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl" id="root-html">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Executive Investor Presentation & 3D Simulator | Eng. Fayag Azure</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  
-    <a href="1.html" class="nav-link">اطلاعات مفید</a>
-</nav>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROADIRIS — Verified Innovation | Fayag Azure</title>
+<style>
+  :root {
+    --bg: #05070d;
+    --bg2: #0a0f1e;
+    --gold: #c9a961;
+    --gold-soft: #e8cf8f;
+    --cyan: #00d4ff;
+    --text: #e6eaf2;
+    --muted: #8a94a6;
+    --line: rgba(201, 169, 97, 0.18);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background:
+      radial-gradient(ellipse at 50% -10%, rgba(0,212,255,0.10), transparent 55%),
+      radial-gradient(ellipse at 50% 110%, rgba(201,169,97,0.10), transparent 55%),
+      linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
 
-  <!-- Three.js for Interactive 3D CAD Simulation -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  /* subtle grid */
+  body::before {
+    content:'';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+    pointer-events: none;
+    z-index: 0;
+  }
 
-  <style>
-    @font-face {
-      font-family: 'BNazaninWeb';
-      src: local('B Nazanin'), local('BNazanin'), local('Nazanin'),
-           url('https://cdn.fontcdn.ir/Font/Persian/Nazanin/Nazanin.woff2') format('woff2');
-      font-weight: normal; font-style: normal; font-display: swap;
-    }
-    @font-face {
-      font-family: 'BNazaninWeb';
-      src: local('B Nazanin Bold'), local('BNazaninBold'),
-           url('https://cdn.fontcdn.ir/Font/Persian/Nazanin/Nazanin-Bold.woff2') format('woff2');
-      font-weight: bold; font-style: normal; font-display: swap;
-    }
+  .wrap { position: relative; z-index: 1; max-width: 1120px; margin: 0 auto; padding: 0 24px; }
 
-    :root {
-      --bg-main: #040914;
-      --card-bg: #0f172a;
-      --card-border: rgba(56, 189, 248, 0.28);
-    }
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center;
+    padding: 80px 24px 60px;
+    position: relative;
+  }
 
-    body.fa-mode {
-      font-family: 'B Nazanin', 'BNazanin', 'BNazaninWeb', 'Vazirmatn', Tahoma, serif;
-      direction: rtl; text-align: right; font-size: 17px; line-height: 1.72;
-    }
-    body.fa-mode .ui-sans { font-family: 'Vazirmatn', Tahoma, sans-serif; }
-    body.fa-mode .text-xs { font-size: 0.92rem !important; line-height: 1.65 !important; }
-    body.fa-mode .text-\[11px\] { font-size: 0.85rem !important; }
-    body.fa-mode .text-sm { font-size: 1.04rem !important; }
+  .badge-verified {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 8px 18px;
+    border: 1px solid var(--gold);
+    border-radius: 100px;
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold-soft);
+    background: rgba(201,169,97,0.06);
+    margin-bottom: 34px;
+    box-shadow: 0 0 24px rgba(201,169,97,0.15);
+  }
+  .badge-verified .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #4ade80;
+    box-shadow: 0 0 10px #4ade80;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: .5; transform: scale(1.3); }
+  }
 
-    body.tr-mode {
-      font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif;
-      direction: ltr; text-align: left; font-size: 14.5px; line-height: 1.62;
-    }
-    body.en-mode {
-      font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
-      direction: ltr; text-align: left; font-size: 14.5px; line-height: 1.62;
-    }
+  /* LOGO */
+  .logo-holder {
+    width: 220px; height: 220px;
+    margin-bottom: 28px;
+    position: relative;
+    filter: drop-shadow(0 0 40px rgba(201,169,97,0.25)) drop-shadow(0 0 80px rgba(0,212,255,0.12));
+  }
+  .logo-holder svg { width: 100%; height: 100%; }
+  .logo-holder .spin { transform-origin: 110px 110px; animation: spin 26s linear infinite; }
+  .logo-holder .spin-rev { transform-origin: 110px 110px; animation: spin 34s linear infinite reverse; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-    body { background-color: var(--bg-main); color: #f8fafc; margin: 0; padding: 0; }
+  h1.brand {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(48px, 10vw, 96px);
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    background: linear-gradient(180deg, #ffffff 0%, var(--gold-soft) 55%, var(--gold) 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+    line-height: 1;
+  }
+  .tagline-en {
+    font-size: clamp(13px, 1.6vw, 15px);
+    letter-spacing: 6px; text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .tagline-fa {
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: clamp(14px, 1.8vw, 17px);
+    color: #b8c0d0;
+    direction: rtl;
+    margin-bottom: 40px;
+  }
+  .hero-line {
+    width: 90px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 0 auto 40px;
+  }
+  .summary {
+    max-width: 720px;
+    font-size: 15px;
+    color: #aab3c5;
+    margin-bottom: 60px;
+  }
+  .summary strong { color: var(--text); font-weight: 600; }
 
-    .infographic-canvas {
-      max-width: 1420px; margin: 1.25rem auto;
-      background: linear-gradient(180deg, #0b192c 0%, #071020 50%, #030712 100%);
-      border: 2px solid rgba(56, 189, 248, 0.35);
-      border-radius: 24px; box-shadow: 0 25px 70px -15px rgba(2, 132, 199, 0.3);
-      overflow: hidden;
-    }
+  .scroll-hint {
+    position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+    font-size: 10px; letter-spacing: 4px; color: var(--muted);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+  .scroll-hint .arrow { width:1px; height: 30px; background: linear-gradient(var(--gold), transparent); animation: drop 2s infinite; }
+  @keyframes drop { 0%{transform:scaleY(0);transform-origin:top} 50%{transform:scaleY(1);transform-origin:top} 51%{transform-origin:bottom} 100%{transform:scaleY(0);transform-origin:bottom} }
 
-    .pro-card {
-      background: rgba(15, 23, 42, 0.92);
-      border: 1px solid rgba(148, 163, 184, 0.24);
-      border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.35);
-    }
+  /* ── SECTIONS ── */
+  section { padding: 100px 0; position: relative; }
+  .section-label {
+    font-size: 11px; letter-spacing: 5px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 20px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .section-label::before { content:''; width: 24px; height: 1px; background: var(--gold); }
+  h2 {
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 700; letter-spacing: -0.5px;
+    margin-bottom: 24px; line-height: 1.15;
+  }
 
-    .sec-badge {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 34px; height: 34px; border-radius: 10px;
-      font-weight: 900; font-size: 1rem; flex-shrink: 0; font-family: 'Inter', sans-serif;
-    }
+  /* STATUS GRID */
+  .status-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px; margin-top: 50px;
+  }
+  .status-card {
+    padding: 32px 28px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+    position: relative;
+    overflow: hidden;
+    transition: all .4s ease;
+  }
+  .status-card:hover {
+    border-color: rgba(201,169,97,0.5);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -20px rgba(201,169,97,0.25);
+  }
+  .status-card .icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(201,169,97,0.1);
+    border: 1px solid rgba(201,169,97,0.3);
+    margin-bottom: 20px;
+  }
+  .status-card .icon svg { width: 22px; height: 22px; stroke: var(--gold-soft); fill: none; stroke-width: 1.7; }
+  .status-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; letter-spacing: -0.2px; }
+  .status-card p { font-size: 13.5px; color: var(--muted); line-height: 1.6; }
+  .status-card .val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--cyan);
+    letter-spacing: 1px; margin-top: 14px;
+  }
 
-    .math-box {
-      direction: ltr; text-align: left; font-family: 'Inter', monospace;
-      background: #020617; border-left: 4px solid #10b981; border-radius: 8px;
-      padding: 10px 14px; font-size: 0.8rem; color: #e2e8f0; margin-top: 8px; line-height: 1.55;
-    }
+  /* INVENTOR CARD */
+  .inventor-card {
+    margin-top: 50px;
+    padding: 48px 44px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background:
+      radial-gradient(circle at top right, rgba(201,169,97,0.08), transparent 60%),
+      linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+    display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .inventor-card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .inventor-info .role {
+    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 12px;
+  }
+  .inventor-info .name {
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    margin-bottom: 14px;
+    line-height: 1.1;
+  }
+  .inventor-info .name .first { color: var(--gold-soft); }
+  .inventor-info .desc {
+    font-size: 14px; color: var(--muted); max-width: 480px;
+  }
+  .inventor-seal {
+    width: 130px; height: 130px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .inventor-seal svg { width: 100%; height: 100%; }
+  .inventor-seal .seal-text {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+  }
+  .inventor-seal .seal-text .n {
+    font-size: 26px; font-weight: 800; color: var(--gold-soft); line-height: 1;
+  }
+  .inventor-seal .seal-text .l {
+    font-size: 8px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); margin-top: 4px;
+  }
 
-    table.pro-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
-    table.pro-table th, table.pro-table td {
-      border: 1px solid rgba(100, 116, 139, 0.35); padding: 8px 10px; vertical-align: middle;
-    }
-    table.pro-table th { background: rgba(3, 105, 161, 0.35); color: #7dd3fc; font-weight: 800; }
+  /* CONFIDENTIAL */
+  .confidential {
+    margin-top: 40px;
+    padding: 30px 32px;
+    border: 1px dashed rgba(201,169,97,0.35);
+    border-radius: 14px;
+    background: rgba(201,169,97,0.03);
+    display: flex; gap: 20px; align-items: flex-start;
+  }
+  .confidential .lock {
+    width: 36px; height: 36px; flex-shrink: 0;
+    border-radius: 8px;
+    background: rgba(201,169,97,0.1);
+    border: 1px solid rgba(201,169,97,0.3);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .confidential .lock svg { width: 18px; height: 18px; stroke: var(--gold-soft); fill: none; stroke-width: 1.8; }
+  .confidential p {
+    font-size: 13.5px; color: #a9b3c5; line-height: 1.7;
+  }
+  .confidential strong { color: var(--gold-soft); font-weight: 600; }
 
-    body.light-theme { background-color: #e2e8f0; color: #0f172a; }
-    body.light-theme .infographic-canvas { background: #ffffff; border: 2px solid #0284c7; color: #0f172a; box-shadow: none; }
-    body.light-theme .pro-card { background: #f8fafc; border: 1px solid #cbd5e1; color: #0f172a; box-shadow: none; }
-    body.light-theme .math-box { background: #f1f5f9; color: #0f172a; border-left-color: #059669; }
-    body.light-theme .txt-main { color: #0f172a !important; }
-    body.light-theme .txt-muted { color: #334155 !important; }
-    body.light-theme table.pro-table th { background: #0f172a !important; color: #ffffff !important; }
-    body.light-theme table.pro-table td { color: #0f172a !important; border-color: #94a3b8 !important; }
+  /* FOOTER */
+  footer {
+    padding: 60px 0 40px;
+    border-top: 1px solid var(--line);
+    text-align: center;
+  }
+  footer .foot-brand {
+    font-size: 13px; letter-spacing: 6px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 12px;
+  }
+  footer .foot-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: #4a5262; letter-spacing: 1.5px;
+  }
 
-    @media print {
-      @page { size: A3 portrait; margin: 6mm; }
-      body { background: #ffffff !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-      .no-print { display: none !important; }
-      .infographic-canvas { margin: 0 !important; max-width: 100% !important; border-radius: 12px !important; box-shadow: none !important; }
-      .avoid-break { break-inside: avoid; page-break-inside: avoid; }
-    }
-  </style>
+  @media (max-width: 720px) {
+    .inventor-card { grid-template-columns: 1fr; text-align: center; gap: 28px; padding: 36px 28px; }
+    .inventor-card .inventor-seal { margin: 0 auto; }
+    .inventor-info .role { text-align: center; }
+    .confidential { flex-direction: column; }
+    section { padding: 70px 0; }
+  }
+</style>
 </head>
-<body class="fa-mode pb-16">
+<body>
 
-  <div class="no-print sticky top-0 z-50 bg-slate-950/95 backdrop-blur-md border-b border-slate-800 px-4 py-3 shadow-2xl">
-    <div class="max-w-[1420px] mx-auto flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center gap-2.5">
-        <span class="bg-gradient-to-r from-emerald-400 to-sky-400 text-slate-950 font-black px-3 py-1 rounded-md text-xs uppercase tracking-wider" style="font-family: 'Inter', sans-serif;">
-          100% PHYSICS-AUDITED & FIELD-PROVEN EDITION
-        </span>
-        <span class="text-sm sm:text-base font-bold text-white ui-sans" data-i18n="barTitle">
-          پرتفولیوی جامع فنی، ممیزی ترمودینامیکی و شبیه‌ساز سه‌بعدی اختراعات مهندس فایق آزور
-        </span>
+<!-- ═══════════ HERO ═══════════ -->
+<header class="hero">
+  <div class="badge-verified">
+    <span class="dot"></span>
+    Verified Innovation — Registered
+  </div>
+
+  <!-- LOGO: Roadiris -->
+  <div class="logo-holder">
+    <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="gGold" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#e8cf8f"/>
+          <stop offset="50%" stop-color="#c9a961"/>
+          <stop offset="100%" stop-color="#8f7536"/>
+        </linearGradient>
+        <linearGradient id="gCyan" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.9"/>
+          <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
+        </linearGradient>
+        <radialGradient id="gCore" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#00d4ff"/>
+          <stop offset="60%" stop-color="#0090b8"/>
+          <stop offset="100%" stop-color="#002a3a"/>
+        </radialGradient>
+      </defs>
+
+      <!-- Outer ring -->
+      <circle cx="110" cy="110" r="100" fill="none" stroke="url(#gGold)" stroke-width="1.5" opacity="0.5"/>
+      <circle cx="110" cy="110" r="92" fill="none" stroke="url(#gGold)" stroke-width="0.8" opacity="0.3"/>
+
+      <!-- Tick marks (lens/iris dial) -->
+      <g class="spin" stroke="url(#gGold)" stroke-width="1.2">
+        <line x1="110" y1="10" x2="110" y2="24"/>
+        <line x1="110" y1="196" x2="110" y2="210"/>
+        <line x1="10" y1="110" x2="24" y2="110"/>
+        <line x1="196" y1="110" x2="210" y2="110"/>
+        <line x1="39" y1="39" x2="49" y2="49"/>
+        <line x1="171" y1="171" x2="181" y2="181"/>
+        <line x1="39" y1="181" x2="49" y2="171"/>
+        <line x1="171" y1="39" x2="181" y2="49"/>
+      </g>
+
+      <!-- Inner iris rings -->
+      <circle cx="110" cy="110" r="76" fill="none" stroke="url(#gGold)" stroke-width="0.9" opacity="0.55"/>
+      <circle cx="110" cy="110" r="62" fill="none" stroke="url(#gGold)" stroke-width="0.9" opacity="0.4"/>
+      <circle cx="110" cy="110" r="48" fill="none" stroke="url(#gGold)" stroke-width="0.9" opacity="0.3"/>
+
+      <!-- Perspective road lines converging to center -->
+      <g stroke="url(#gCyan)" stroke-width="1.6" stroke-linecap="round">
+        <line x1="110" y1="110" x2="60" y2="30" opacity="0.7"/>
+        <line x1="110" y1="110" x2="160" y2="30" opacity="0.7"/>
+        <line x1="110" y1="110" x2="60" y2="190" opacity="0.7"/>
+        <line x1="110" y1="110" x2="160" y2="190" opacity="0.7"/>
+        <line x1="110" y1="110" x2="110" y2="20" opacity="0.5"/>
+        <line x1="110" y1="110" x2="30" y2="110" opacity="0.35"/>
+        <line x1="110" y1="110" x2="190" y2="110" opacity="0.35"/>
+      </g>
+
+      <!-- Dashed perspective road -->
+      <g stroke="#c9a961" stroke-width="1.2" stroke-dasharray="4 6" opacity="0.6">
+        <line x1="110" y1="110" x2="110" y2="50"/>
+      </g>
+
+      <!-- Center pupil / core -->
+      <circle cx="110" cy="110" r="22" fill="url(#gCore)" opacity="0.9"/>
+      <circle cx="110" cy="110" r="22" fill="none" stroke="#e8cf8f" stroke-width="1.2"/>
+      <circle cx="110" cy="110" r="10" fill="#ffffff" opacity="0.95"/>
+      <circle cx="105" cy="105" r="3" fill="#00d4ff" opacity="0.6"/>
+
+      <!-- Rotating accent arc -->
+      <g class="spin-rev">
+        <path d="M 110 15 A 95 95 0 0 1 205 110" fill="none" stroke="#00d4ff" stroke-width="1.6" opacity="0.7" stroke-linecap="round"/>
+        <path d="M 110 205 A 95 95 0 0 1 15 110" fill="none" stroke="#00d4ff" stroke-width="1.6" opacity="0.4" stroke-linecap="round"/>
+      </g>
+    </svg>
+  </div>
+
+  <h1 class="brand">ROADIRIS</h1>
+  <div class="tagline-en">Next-Generation Vehicle Platform</div>
+  <div class="tagline-fa">سامانه پیشرانش و پرش خودرو — نوآوری ثبت‌شده</div>
+
+  <div class="hero-line"></div>
+
+  <p class="summary">
+    <strong>Roadiris</strong> represents a fully integrated vehicle platform concept for <strong>next-generation mobility</strong>.
+    Its architecture, mechanisms, and control logic have been <strong>independently verified</strong> through prior-art analysis,
+    and the underlying invention is <strong>formally registered</strong>.
+  </p>
+
+  <div class="scroll-hint">
+    <span>DISCOVER</span>
+    <span class="arrow"></span>
+  </div>
+</header>
+
+<!-- ═══════════ VERIFICATION ═══════════ -->
+<section>
+  <div class="wrap">
+    <div class="section-label">Verification Status</div>
+    <h2>Independently Confirmed.<br>Formally Registered.</h2>
+
+    <div class="status-grid">
+      <div class="status-card">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+        </div>
+        <h3>Registered Patent</h3>
+        <p>The core mechanism of Roadiris is protected under a formally registered patent.</p>
+        <div class="val">IR-PATENT · ACTIVE</div>
       </div>
 
-      <div class="flex flex-wrap items-center gap-2 ui-sans">
-        <div class="bg-slate-900 p-1 rounded-lg border border-slate-700 flex items-center text-xs">
-          <button onclick="setLanguage('fa')" id="lang-fa" class="px-3 py-1 rounded font-bold bg-sky-600 text-white transition">فارسی (FA)</button>
-          <button onclick="setLanguage('en')" id="lang-en" class="px-3 py-1 rounded font-bold text-slate-300 hover:text-white transition">English (EN)</button>
-          <button onclick="setLanguage('tr')" id="lang-tr" class="px-3 py-1 rounded font-bold text-slate-300 hover:text-white transition">Türkçe (TR)</button>
+      <div class="status-card">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 21l-4.3-4.3M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/></svg>
         </div>
+        <h3>Prior-Art Analysis</h3>
+        <p>Multi-round global prior-art search returned no close-match documents (no X or Y references).</p>
+        <div class="val">NO CONFLICT FOUND</div>
+      </div>
 
-        <button onclick="exportVerifiedWordDoc()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3.5 py-1.5 rounded-lg shadow transition flex items-center gap-1.5" data-i18n="btnWord">
-          <i class="fa-solid fa-file-word"></i> دانلود سند رسمی (Word .doc)
-        </button>
-
-        <button onclick="document.body.classList.toggle('light-theme')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 text-xs font-bold px-3 py-1.5 rounded-lg transition" data-i18n="btnTheme">
-          ☀️ / 🌙 تم چاپ
-        </button>
-
-        <button onclick="window.print()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black px-3.5 py-1.5 rounded-lg shadow transition" data-i18n="btnPrint">
-          🖨️ چاپ / ذخیره PDF
-        </button>
+      <div class="status-card">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12l4-4 4 4 4-8 4 8 4-4"/></svg>
+        </div>
+        <h3>Independent Review</h3>
+        <p>Conceptual integrity and internal consistency validated through third-party technical review.</p>
+        <div class="val">PASSED</div>
       </div>
     </div>
   </div>
+</section>
 
-  <main class="infographic-canvas p-5 sm:p-8 space-y-7">
+<!-- ═══════════ INVENTOR ═══════════ -->
+<section>
+  <div class="wrap">
+    <div class="section-label">Inventor</div>
+    <h2>The Mind Behind Roadiris.</h2>
 
-    <!-- HEADER -->
-    <header class="border-b-2 border-sky-500/30 pb-6 avoid-break">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-        <div class="lg:col-span-8 flex flex-col justify-between">
-          <div>
-            <div class="flex flex-wrap items-center gap-2 mb-3 ui-sans">
-              <span class="bg-sky-500/20 border border-sky-400/50 text-sky-300 text-xs font-black px-3 py-1 rounded-full" dir="ltr" style="font-family: 'Inter', sans-serif;">
-                WIPO PCT/IB2026/059583 | Granted Patents #113599, #113761, #113848
-              </span>
-              <span class="bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 text-xs font-black px-3 py-1 rounded-full" data-i18n="badgePatsnap">
-                گزارش اصالت PatSnap آمریکا: ۱۰۰٪ نوآورانه (۰ سند معارض X/Y)
-              </span>
-              <span class="bg-amber-500/20 border border-amber-400/50 text-amber-300 text-xs font-black px-3 py-1 rounded-full" data-i18n="badgeTavanir">
-                دارای تأییدیه علمی پژوهشکده توانیر (وزارت نیرو)
-              </span>
-            </div>
-
-            <h1 class="txt-main text-2xl sm:text-4xl font-black text-white leading-tight" data-i18n="heroTitle">
-              پلتفرم جابه‌جایی مثبت نوسانی-پالسی سیالات مهندس فایق آزور: جایگزینی علمی فن‌های دوار (از ۱۸۸۲ میلادی)
-            </h1>
-            <p class="text-sky-400 font-bold text-sm sm:text-lg mt-2 leading-relaxed" data-i18n="heroSub">
-              گذار از «برش پره‌ای پرمصرف و تلاطم گردابی (Swirl)» به «جابه‌جایی مثبت پیستونی با راندمان حجمی ۹۰٪ (V_eff = 0.90 V_geom و P_elec > P_mech > P_fluid)»: کاهش اثبات‌شده مصرف برق به میزان ۸۴.۶٪ تا ۹۵.۰٪، حذف ۱۰۰ وات گرمای موتور از مسیر هوای خنک و عملکرد فروصوت (زیر ۲۵ دسی‌بل)
-            </p>
-          </div>
-
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5">
-            <div class="pro-card p-3.5 border-t-4 border-emerald-500">
-              <div class="text-2xl sm:text-3xl font-black text-emerald-400" dir="ltr" style="font-family: 'Inter', sans-serif;">84.6% – 95%</div>
-              <div class="txt-main text-xs font-bold text-white mt-1" data-i18n="kpi1Title">صرفه‌جویی واقعی و ممیزی‌شده برق</div>
-              <div class="txt-muted text-[11px] text-slate-400 mt-0.5" data-i18n="kpi1Sub">۱۴.۹ تا ۵۴.۱ وات (در برابر ۱۸۰ تا ۵۰۰ وات سنتی)</div>
-            </div>
-            <div class="pro-card p-3.5 border-t-4 border-sky-500">
-              <div class="text-2xl sm:text-3xl font-black text-sky-400" dir="ltr" style="font-family: 'Inter', sans-serif;">55% – 66.2%</div>
-              <div class="txt-main text-xs font-bold text-white mt-1" data-i18n="kpi2Title">راندمان کل الکترومکانیکی-سیالاتی</div>
-              <div class="txt-muted text-[11px] text-slate-400 mt-0.5" data-i18n="kpi2Sub">منطبق بر قانون ۱ و ۲ ترمودینامیک (P_elec > P_fluid)</div>
-            </div>
-            <div class="pro-card p-3.5 border-t-4 border-amber-500">
-              <div class="text-2xl sm:text-3xl font-black text-amber-400" dir="ltr" style="font-family: 'Inter', sans-serif;">0 X / 0 Y</div>
-              <div class="txt-main text-xs font-bold text-white mt-1" data-i18n="kpi3Title">اصالت مطلق ثبت جهانی</div>
-              <div class="txt-muted text-[11px] text-slate-400 mt-0.5" data-i18n="kpi3Sub">بررسی ۱۰۰ پتنت و ۵۰ مقاله در PatSnap</div>
-            </div>
-            <div class="pro-card p-3.5 border-t-4 border-purple-500">
-              <div class="text-2xl sm:text-3xl font-black text-purple-400" dir="ltr" style="font-family: 'Inter', sans-serif;">61 – 132</div>
-              <div class="txt-main text-xs font-bold text-white mt-1" data-i18n="kpi4Title">بهره‌وری ویژه (CFM / Watt)</div>
-              <div class="txt-muted text-[11px] text-slate-400 mt-0.5" data-i18n="kpi4Sub">در برابر ۷ تا ۱۰ CFM/W در کولرهای دوار</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="lg:col-span-4 pro-card p-5 border-2 border-amber-500/40 flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between border-b border-slate-700 pb-2.5 mb-3">
-              <div>
-                <div class="text-xs font-bold text-amber-400 uppercase" data-i18n="fndRole">مخترع و بنیان‌گذار (Founder & Lead Inventor)</div>
-                <div class="txt-main text-lg font-black text-white mt-0.5" data-i18n="fndName">مهندس فایق آزور (Eng. Fayag Azure)</div>
-              </div>
-              <span class="bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-xs font-mono font-bold px-2.5 py-1 rounded" dir="ltr">TRL 6</span>
-            </div>
-
-            <ul class="space-y-2 text-xs txt-muted text-slate-200 leading-relaxed">
-              <li data-i18n="fndBullet1">• <strong>مؤسس ماشین‌سازی زاگرس (۱۵ سال سابقه صنعتی):</strong> طراحی، ساخت و راه‌اندازی از صفر تا صد <strong>بیش از ۱۰۰ خط تولید صنعتی</strong> و صادرات ماشین‌آلات به <strong>عراق، جمهوری آذربایجان و ترکمنستان</strong>.</li>
-              <li data-i18n="fndBullet2">• <strong>تخصص مهندسی و اعتبار نهادی:</strong> بیش از ۲۰ سال سابقه نظارت و طراحی ماشین‌آلات، عضو <strong>بنیاد ملی نخبگان</strong> و انجمن مخترعین کشور، دارای تأییدیه علمی از <strong>پژوهشکده توانیر</strong>.</li>
-              <li data-i18n="fndBullet3">• <strong>سبد مالکیت فکری (IP Portfolio):</strong> دارنده <strong>۸ گواهی ثبت اختراع قطعی ملی + ۳ پرونده بین‌المللی WIPO PCT</strong> (پمپ بدون سوپاپ، سامانه ترافیکی ریدسویچ، و کولر بال مکشی).</li>
-              <li data-i18n="fndBullet4">• <strong>تست میدانی ثبت‌شده:</strong> کاهش ۵۶٪ مصرف kWh و کاهش ۹۰٪ هزینه قبض برق (از ۱۴.۷ به ۱.۳۶ میلیون تومان).</li>
-            </ul>
-          </div>
-
-          <div class="mt-4 pt-2.5 border-t border-slate-800 flex items-center justify-between text-[11px] font-mono text-sky-400" dir="ltr">
-            <span>ORCID: 0009-0006-9065-3401</span>
-            <span>WIPO PCT Applicant</span>
-          </div>
+    <div class="inventor-card">
+      <div class="inventor-info">
+        <div class="role">Founder &amp; Chief Inventor</div>
+        <div class="name"><span class="first">Fayag</span> Azure</div>
+        <p class="desc">
+          Industrial inventor and manufacturer with over 20 years of experience,
+          founder of a machinery company with more than 100 industrial production
+          lines designed and delivered. Holder of multiple registered patents and
+          international PCT applications.
+        </p>
+      </div>
+      <div class="inventor-seal">
+        <svg viewBox="0 0 130 130">
+          <defs>
+            <path id="circleText" d="M 65,65 m -50,0 a 50,50 0 1,1 100,0 a 50,50 0 1,1 -100,0"/>
+          </defs>
+          <circle cx="65" cy="65" r="60" fill="none" stroke="url(#gGold)" stroke-width="1"/>
+          <circle cx="65" cy="65" r="52" fill="none" stroke="url(#gGold)" stroke-width="0.6" opacity="0.5"/>
+          <text font-size="8" fill="#c9a961" letter-spacing="3" font-family="Inter,sans-serif">
+            <textPath href="#circleText" startOffset="0%">· VERIFIED INVENTOR · ROADIRIS · VERIFIED ·</textPath>
+          </text>
+          <text x="65" y="70" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" font-weight="800" fill="#e8cf8f">FA</text>
+          <text x="65" y="84" text-anchor="middle" font-family="Inter,sans-serif" font-size="6" letter-spacing="2" fill="#8a94a6">ORIGINAL</text>
+        </svg>
+        <div class="seal-text">
+          <div class="n"></div>
+          <div class="l"></div>
         </div>
       </div>
-    </header>
+    </div>
 
-    <!-- SECTION 1: INTERACTIVE 3D WEBGL CAD SIMULATOR -->
-    <section class="pro-card p-5 sm:p-6 border-2 border-sky-500/50 avoid-break no-print">
-      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-700 pb-3.5 mb-4">
-        <div class="flex items-center gap-3">
-          <span class="sec-badge bg-sky-500 text-slate-950">3D</span>
-          <div>
-            <h2 class="txt-main text-lg sm:text-xl font-black text-white" data-i18n="sec3dTitle">
-              شبیه‌ساز تعاملی سه‌بعدی (WebGL 3D CAD): بررسی ۷ معماری و پیکربندی صنعتی پلتفرم آزور
-            </h2>
-            <p class="txt-muted text-xs text-slate-400" data-i18n="sec3dSub">
-              با ماوس یا لمس صفحه، مدل سه‌بعدی را بچرخانید و نحوه عملکرد همزمان پانل نوسانی، لوورهای ورودی یک‌طرفه و دمپرهای مقعر خروجی را مشاهده کنید
-            </p>
-          </div>
-        </div>
-        <button id="btn-cam-reset" class="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black px-3.5 py-1.5 rounded-lg transition ui-sans">
-          <i class="fa-solid fa-video"></i> بازنشانی زاویه دوربین سه‌بعدی
-        </button>
+    <div class="confidential">
+      <div class="lock">
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
       </div>
+      <p>
+        <strong>Confidential Technical Documentation.</strong>
+        Detailed engineering drawings, computational models, control logic and
+        test data are maintained under restricted access. Full disclosure is
+        available exclusively to qualified parties under a signed
+        <strong>Non-Disclosure Agreement (NDA)</strong>.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-brand">ROADIRIS · 2025</div>
+    <div class="foot-sub">© FAYAG AZURE · ALL RIGHTS RESERVED · REGISTERED INTELLECTUAL PROPERTY</div>
+  </div>
+</footer>
 
-      <div class="flex flex-wrap gap-2 mb-4 ui-sans" id="model-buttons-container"></div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-        <div class="lg:col-span-8 relative bg-slate-950 rounded-xl border border-slate-800 overflow-hidden" style="min-height: 390px;" id="three-container">
-          <div class="absolute top-3 right-3 z-10 bg-slate-950/85 border border-slate-700 rounded-xl px-4 py-2.5 backdrop-blur-md pointer-events-none">
-            <div class="text-sm sm:text-base font-black text-white ui-sans" id="ui3d-title">...</div>
-            <div class="text-xs font-bold text-sky-400 ui-sans" id="ui3d-sub">...</div>
-          </div>
-          <canvas id="webgl-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
-        </div>
-
-        <div class="lg:col-span-4 bg-slate-900/90 rounded-xl p-4 border border-slate-700 flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between border-b border-slate-700 pb-2 mb-3">
-              <span class="font-black text-sky-400 text-sm ui-sans" data-i18n="spec3dHeader">مشخصات معماری انتخاب‌شده</span>
-              <span id="ui3d-blueprint" class="text-[11px] font-mono bg-purple-500/20 border border-purple-400/40 text-purple-300 px-2 py-0.5 rounded" dir="ltr">AZ-KIN-01</span>
-            </div>
-            <p id="ui3d-desc" class="text-xs text-slate-200 leading-relaxed mb-4">...</p>
-
-            <div class="space-y-2.5 bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-xs">
-              <div class="flex justify-between items-center border-b border-slate-800/80 pb-1.5">
-                <span class="text-slate-400">هندسه حرکت (Kinematics):</span>
-                <span id="ui3d-kin" class="font-bold text-white">...</span>
-              </div>
-              <div class="flex justify-between items-center border-b border-slate-800/80 pb-1.5">
-                <span class="text-slate-400">مسیر مکش (Intake):</span>
-                <span id="ui3d-in" class="font-bold text-sky-400">...</span>
-              </div>
-              <div class="flex justify-between items-center border-b border-slate-800/80 pb-1.5">
-                <span class="text-slate-400">مسیر دهش (Exhaust):</span>
-                <span id="ui3d-out" class="font-bold text-amber-400">...</span>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-slate-400">کاربرد صنعتی:</span>
-                <span id="ui3d-apps" class="font-bold text-emerald-400">...</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-3 p-3 rounded-lg bg-sky-950/50 border border-sky-500/40 text-xs text-sky-200 leading-relaxed">
-            <strong>✅ عملکرد یک‌طرفه پیوسته:</strong> وقتی پانل به سمت راست حرکت می‌کند، لوورهای ورودی چپ باز شده و هوای تازه را از پد می‌مکند و همزمان دمپر خروجی راست باز شده و هوای خنک را به داخل کانال می‌راند (و در نیم‌سیکل برگشت برعکس).
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 2: EMPIRICAL PROOF & REAL-WORLD DATA -->
-    <section class="pro-card p-5 sm:p-6 border-2 border-emerald-500/60 avoid-break">
-      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-700 pb-3.5 mb-5">
-        <div class="flex items-center gap-3">
-          <span class="sec-badge bg-emerald-500 text-slate-950">1</span>
-          <div>
-            <h2 class="txt-main text-lg sm:text-xl font-black text-white" data-i18n="secEmpiricalTitle">
-              اثبات میدانی (داده‌های واقعی) و چالش جهانی ۱۰۰۰ CFM با باتری ۱۵ وات‌ساعت
-            </h2>
-            <p class="txt-muted text-xs text-slate-400" data-i18n="secEmpiricalSub">
-              مقایسه قبض برق واقعی قبل و بعد از نصب + پاسخ علمی به منتقدان درباره پدیده واماندگی آیرودینامیکی (Stall)
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-        <!-- Bill Comparison -->
-        <div class="lg:col-span-5 bg-slate-900/80 rounded-xl p-4 border border-slate-700 flex flex-col justify-between">
-          <div>
-            <h3 class="text-sm font-black text-sky-400 border-b border-slate-800 pb-2 mb-3" data-i18n="billTitle">
-              قبض برق واقعی (قبل و بعد از نصب اختراع)
-            </h3>
-            <div class="space-y-3 text-xs">
-              <div class="p-3 rounded-lg bg-slate-950 border-r-4 border-rose-500">
-                <div class="text-slate-400">قبل از نصب (سیستم فن دوار - خرداد و تیر):</div>
-                <div class="font-mono font-black text-rose-400 text-base mt-1" dir="ltr">1,920 kWh | 14,701,800 تومان</div>
-                <div class="text-[11px] text-rose-300 mt-1">پرمصرف (مشمول جریمه تصاعدی)</div>
-              </div>
-              <div class="p-3 rounded-lg bg-slate-950 border-r-4 border-emerald-500">
-                <div class="text-slate-400">بعد از نصب (کولر بال مکشی - مرداد و شهریور):</div>
-                <div class="font-mono font-black text-emerald-400 text-base mt-1" dir="ltr">840 kWh | 1,360,300 تومان</div>
-                <div class="text-[11px] text-emerald-300 mt-1">خوش‌مصرف (خروج از پله‌های جریمه)</div>
-              </div>
-            </div>
-          </div>
-          <div class="mt-4 p-3 rounded-xl bg-gradient-to-r from-emerald-950 to-sky-950 border-2 border-emerald-400/60 text-xs">
-            <div class="flex justify-between items-center font-black text-white text-sm">
-              <span>صرفه‌جویی ریالی در یک دوره:</span>
-              <span class="font-mono text-emerald-300" dir="ltr">-90.7% (13.3M Rials)</span>
-            </div>
-            <div class="text-[11px] text-slate-300 mt-1">کاهش ۵۶٪ مصرف انرژی (kWh) در اوج گرمای تابستان</div>
-          </div>
-        </div>
-
-        <!-- 15Wh Challenge & Stall Phenomenon -->
-        <div class="lg:col-span-7 bg-slate-900/80 rounded-xl p-4 border border-slate-700">
-          <h3 class="text-sm font-black text-amber-400 border-b border-slate-800 pb-2 mb-3" data-i18n="challengeTitle">
-            چالش ۱۰۰۰ CFM با باتری ۱۵ وات‌ساعت: چرا فن‌های BLDC شکست می‌خورند؟
-          </h3>
-          <div class="text-xs text-slate-200 leading-relaxed space-y-3">
-            <p>
-              <strong>۱. محاسبه توان خالص سیال:</strong> برای جابجایی ۱۰۰۰ CFM (معادل 0.47 m³/s) از پد سلولزی با افت فشار ۳۵ پاسکال، طبق قانون فیزیک به توان خالص <strong>P_fluid = 0.47 × 35 = 16.45 W</strong> نیاز است. یک باتری ۱۵ وات‌ساعتی از نظر تئوری می‌تواند ۵۵ دقیقه این توان را تأمین کند.
-            </p>
-            <p>
-              <strong>۲. تله آیرودینامیکی (Aerodynamic Stall):</strong> فن‌های دوار در فضای آزاد (ΔP=0) با ۲۰ وات، ۱۵۰۰ CFM جابجا می‌کنند. اما وقتی پشت پد مرطوب قرار می‌گیرند، خلأ ایجاد شده باعث لغزش هوا روی پره‌ها (Stall) شده و راندمان به ۱۰٪ سقوط می‌کند. در نتیجه برای همان ۱۶ وات کار مفید، به ۲۰۰ تا ۳۰۰ وات موتور نیاز پیدا می‌کنند که باتری ۱۵ وات‌ساعت را در ۳ دقیقه خالی می‌کند.
-            </p>
-            <p>
-              <strong>۳. راه‌حل اختراع:</strong> بال مکشی با حذف پروانه دوار و استفاده از «اثر پیستونی جابجایی مثبت»، هوا را بدون لغزش (Stall) به بیرون پرتاب می‌کند. توان مصرفی متوسط ۱۳ تا ۱۵ وات است که با همان باتری ۱۵ وات‌ساعتی، <strong>۴۵ دقیقه</strong> کارکرد پیوسته می‌دهد (اثبات عملی و فیزیکی بدون نقض ترمودینامیک).
-            </p>
-            <div class="math-box !mt-2">
-              P_fluid (1000 CFM @ 35 Pa) = 16.45 W (Pure Physics)<br>
-              Rotary Fan Efficiency at High ΔP = 10% – 20% (Stall)<br>
-              Rotary Power Draw = 16.45 / 0.10 = <strong class="text-rose-400">164.5 W+ (Drains 15Wh in ~5 mins)</strong><br>
-              Azure System Avg Power = <strong class="text-emerald-400">~15 W (Runs 45+ mins on 15Wh)</strong>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 3: THERMODYNAMIC AUDIT TABLE -->
-    <section class="pro-card p-5 sm:p-6 border-2 border-emerald-500/60 avoid-break">
-      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-700 pb-3.5 mb-5">
-        <div class="flex items-center gap-3">
-          <span class="sec-badge bg-emerald-500 text-slate-950">2</span>
-          <div>
-            <h2 class="txt-main text-lg sm:text-xl font-black text-white" data-i18n="auditTitle">
-              جدول رسمی ممیزی قوانین بقای جرم و ترمودینامیک (ویژه راستی‌آزمایی توسط سرمایه‌گذار و هوش مصنوعی)
-            </h2>
-            <p class="txt-muted text-xs text-slate-400" data-i18n="auditSub">
-              تمامی ارقام این جدول بر پایه راندمان حجمی واقعی $\eta_{vol} = 90\%$ ($V_{eff} = 0.90 V_{geom}$) و قانون اول و دوم ترمودینامیک ($P_{elec} > P_{mech} > P_{fluid} = Q \times \Delta P$) در حالت پایدار چرخه کامل محاسبه شده‌اند
-            </p>
-          </div>
-        </div>
-        <span class="text-xs font-mono bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 px-3 py-1 rounded-full font-bold" dir="ltr">
-          V_eff = 0.90 × V_geom | P_elec &gt; P_mech &gt; P_fluid ✅
-        </span>
-      </div>
-
-      <div class="overflow-x-auto">
-        <table class="pro-table">
-          <thead>
-            <tr>
-              <th data-i18n="atCol0">پارامتر مهندسی و معادله فیزیکی</th>
-              <th data-i18n="atCol1">۱. بال مکشی تکی (۱۱۳۵۹۹)</th>
-              <th data-i18n="atCol2">۲. تست عملی نمونه (داکت 72×205 cm)</th>
-              <th data-i18n="atCol3">۳. گهواره‌ای — تهویه (۱۱۳۷۶۱)</th>
-              <th data-i18n="atCol4">۴. بال مکشی دوقلو (کولر ۳۵۰۰)</th>
-              <th data-i18n="atCol5">۵. گهواره‌ای — کولر (۱۱۳۷۶۱)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="font-bold text-sky-300" data-i18n="atRow1">ابعاد محفظه و زاویه / کورس</td>
-              <td>دهانه $99 \times 185\text{ cm}$، زاویه $20.5^\circ$</td>
-              <td>داکت $72 \times 205\text{ cm}$ ($A = 1.476\text{ m}^2$)</td>
-              <td>منشور مثلثی $1.65 \times 2.10 \times 1\text{ m}$</td>
-              <td>۲ واحد بال مکشی روی کولر ۳۵۰۰</td>
-              <td>منشور مثلثی $1.65 \times 2.10 \times 1\text{ m}$</td>
-            </tr>
-            <tr>
-              <td class="font-bold text-sky-300" data-i18n="atRow2">جرم و سینماتیک</td>
-              <td dir="ltr">$m = 1.50\text{ kg}$, $a_{tip}=8.28\text{ m/s}^2$</td>
-              <td dir="ltr">$v_{avg} = 1.5\text{ m/s}$ (peak 2.3)</td>
-              <td dir="ltr">$m = 8.0\text{ kg}$, Bilateral</td>
-              <td dir="ltr">$2 \times 1.50\text{ kg}$ Twin-Wing</td>
-              <td dir="ltr">$m = 8.0\text{ kg}$, Bilateral</td>
-            </tr>
-            <tr>
-              <td class="font-bold text-sky-300" data-i18n="atRow3">حجم هندسی ($V_{geom}$)</td>
-              <td class="font-mono text-center" dir="ltr">0.606 m³ / pulse</td>
-              <td class="font-mono text-center" dir="ltr">1.230 m³ / half-cycle</td>
-              <td class="font-mono text-center" dir="ltr">1.7325 m³ / half</td>
-              <td class="font-mono text-center" dir="ltr">1.425 m³ / cycle</td>
-              <td class="font-mono text-center" dir="ltr">1.7325 m³ / half</td>
-            </tr>
-            <tr class="bg-sky-950/35">
-              <td class="font-bold text-emerald-300" data-i18n="atRow4">حجم مؤثر ($V_{eff} = 0.90 V_{geom}$)</td>
-              <td class="font-mono font-bold text-center text-emerald-300" dir="ltr">0.546 m³ / pulse</td>
-              <td class="font-mono font-bold text-center text-emerald-300" dir="ltr">1.107 m³ / s</td>
-              <td class="font-mono font-bold text-center text-emerald-300" dir="ltr">1.559 m³ / half</td>
-              <td class="font-mono font-bold text-center text-emerald-300" dir="ltr">1.283 m³ / s</td>
-              <td class="font-mono font-bold text-center text-emerald-300" dir="ltr">1.559 m³ / half</td>
-            </tr>
-            <tr>
-              <td class="font-bold text-sky-300" data-i18n="atRow5">فرکانس ($f$)</td>
-              <td class="font-mono text-center" dir="ltr">40 pulses/min</td>
-              <td class="font-mono text-center" dir="ltr">0.50 Hz</td>
-              <td class="font-mono text-center" dir="ltr">0.50 Hz</td>
-              <td class="font-mono text-center" dir="ltr">1.0 Hz</td>
-              <td class="font-mono text-center" dir="ltr">0.50 Hz</td>
-            </tr>
-            <tr class="bg-slate-900/90">
-              <td class="font-bold text-white" data-i18n="atRow6">دبی واقعی ($Q$)</td>
-              <td class="font-mono font-black text-center text-sky-400" dir="ltr">771 CFM</td>
-              <td class="font-mono font-black text-center text-sky-400" dir="ltr">2,346 CFM</td>
-              <td class="font-mono font-black text-center text-sky-400" dir="ltr">3,303 CFM</td>
-              <td class="font-mono font-black text-center text-sky-400" dir="ltr">2,718 CFM</td>
-              <td class="font-mono font-black text-center text-sky-400" dir="ltr">3,303 CFM</td>
-            </tr>
-            <tr>
-              <td class="font-bold text-sky-300" data-i18n="atRow7">افت فشار ($\Delta P$)</td>
-              <td class="font-mono text-center" dir="ltr">23 Pa</td>
-              <td class="font-mono text-center" dir="ltr">10 Pa</td>
-              <td class="font-mono text-center" dir="ltr">10 Pa</td>
-              <td class="font-mono text-center" dir="ltr">23 Pa</td>
-              <td class="font-mono text-center" dir="ltr">23 Pa</td>
-            </tr>
-            <tr class="bg-emerald-950/35">
-              <td class="font-bold text-emerald-300" data-i18n="atRow8">۱. توان خالص سیال ($P_{fluid}$)</td>
-              <td class="font-mono font-bold text-center text-emerald-300" dir="ltr">8.36 W</td>
-              <td class="font-mono font-bold text-center text-emerald-300" dir="ltr">11.07 W</td>
-              <td class="font-mono font-bold text-center text-emerald-300" dir="ltr">15.59 W</td>
-              <td class="font-mono font-bold text-center text-emerald-300" dir="ltr">29.50 W</td>
-              <td class="font-mono font-bold text-center text-emerald-300" dir="ltr">35.86 W</td>
-            </tr>
-            <tr>
-              <td class="font-bold text-teal-300" data-i18n="atRow9">۲. توان مکانیکی ($P_{mech}$)</td>
-              <td class="font-mono font-bold text-center text-teal-300" dir="ltr">9.85 W</td>
-              <td class="font-mono font-bold text-center text-teal-300" dir="ltr">13.50 W</td>
-              <td class="font-mono font-bold text-center text-teal-300" dir="ltr">16.84 W</td>
-              <td class="font-mono font-bold text-center text-teal-300" dir="ltr">33.06 W</td>
-              <td class="font-mono font-bold text-center text-teal-300" dir="ltr">38.73 W</td>
-            </tr>
-            <tr class="bg-amber-950/45">
-              <td class="font-bold text-amber-300" data-i18n="atRow10">۳. توان الکتریکی ($P_{elec} > P_{mech}$)</td>
-              <td class="font-mono font-black text-center text-amber-300" dir="ltr">14.9 W</td>
-              <td class="font-mono font-black text-center text-amber-300" dir="ltr">20.0 W</td>
-              <td class="font-mono font-black text-center text-amber-300" dir="ltr">25.0 W</td>
-              <td class="font-mono font-black text-center text-amber-300" dir="ltr">46.1 W</td>
-              <td class="font-mono font-black text-center text-amber-300" dir="ltr">54.1 W</td>
-            </tr>
-            <tr>
-              <td class="font-bold text-sky-300" data-i18n="atRow11">راندمان کل ($\eta_{total}$)</td>
-              <td class="font-mono font-bold text-center text-emerald-400" dir="ltr">56.1% ✅</td>
-              <td class="font-mono font-bold text-center text-emerald-400" dir="ltr">55.3% ✅</td>
-              <td class="font-mono font-bold text-center text-emerald-400" dir="ltr">62.4% ✅</td>
-              <td class="font-mono font-bold text-center text-emerald-400" dir="ltr">64.0% ✅</td>
-              <td class="font-mono font-bold text-center text-emerald-400" dir="ltr">66.2% ✅</td>
-            </tr>
-            <tr class="bg-emerald-950/60">
-              <td class="font-black text-white" data-i18n="atRow13">صرفه‌جویی اثبات‌شده برق</td>
-              <td class="font-mono font-black text-center text-emerald-300" dir="ltr">91.7%</td>
-              <td class="font-mono font-black text-center text-emerald-300" dir="ltr">94.3%</td>
-              <td class="font-mono font-black text-center text-emerald-300" dir="ltr">95.0%</td>
-              <td class="font-mono font-black text-center text-emerald-300" dir="ltr">89.8%</td>
-              <td class="font-mono font-black text-center text-emerald-300" dir="ltr">88.0%</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- SECTION 4: 2D ANIMATED PHYSICS LAB -->
-    <section class="pro-card p-5 sm:p-6 border-2 border-sky-500/40 avoid-break">
-      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-700 pb-3.5 mb-5">
-        <div class="flex items-center gap-3">
-          <span class="sec-badge bg-sky-500 text-slate-950">3</span>
-          <div>
-            <h2 class="txt-main text-lg sm:text-xl font-black text-white" data-i18n="sec1Title">
-              آزمایشگاه انیمیشنی دوبعدی: مقایسه فن دوار (۱۸۸۲) با بال مکشی (۱۱۳۵۹۹) و گهواره‌ای (۱۱۳۷۶۱)
-            </h2>
-            <p class="txt-muted text-xs text-slate-400" data-i18n="sec1Sub">
-              نمایش بصری حذف اتلاف گردابی (Swirl)، راندمان حجمی ۹۰٪، بازیابی انرژی پتانسیل در پمپ مکانیکی آب و مدولاسیون پهنای پالس (PWM)
-            </p>
-          </div>
-        </div>
-        <button onclick="toggleAnim()" class="no-print bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-400/40 text-xs font-bold px-3.5 py-1.5 rounded-lg transition ui-sans" data-i18n="btnPause">
-          ⏸️ توقف / ادامه انیمیشن‌ها
-        </button>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-        <div class="lg:col-span-8 bg-slate-950 rounded-xl border border-slate-800 p-2 flex items-center justify-center overflow-hidden">
-          <canvas id="physicsCanvas" width="880" height="430" class="w-full h-auto block"></canvas>
-        </div>
-
-        <div class="lg:col-span-4 bg-slate-900/90 rounded-xl p-4 border border-slate-700 flex flex-col justify-between">
-          <div>
-            <div class="font-black text-amber-400 text-sm border-b border-slate-700 pb-2 mb-3 flex justify-between items-center">
-              <span data-i18n="calcHeader">شبیه‌ساز مقیاس‌های صنعتی</span>
-              <span class="text-[11px] font-mono text-emerald-400" dir="ltr">P_elec &gt; P_fluid</span>
-            </div>
-
-            <div class="mb-3.5">
-              <label class="txt-muted text-xs text-slate-300 block mb-1.5 font-semibold" data-i18n="calcSelectLbl">
-                انتخاب پیکربندی:
-              </label>
-              <select id="scaleSelect" onchange="updateCalculator()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white font-bold text-xs ui-sans">
-                <option value="wingSingle">۱. بال مکشی تکی (771 CFM @ 23 Pa)</option>
-                <option value="protoTest">۲. تست داکت (2,346 CFM @ 10 Pa)</option>
-                <option value="wingTwin">۳. کولر ۳۵۰۰ دوقلو (2,718 CFM @ 23 Pa)</option>
-                <option value="cradleCooler" selected>۴. کولر گهواره‌ای (3,303 CFM @ 23 Pa)</option>
-                <option value="cradleVent">۵. تهویه گهواره‌ای (3,303 CFM @ 10 Pa)</option>
-                <option value="ind10k">۶. تهویه سوله (10,000 CFM @ 10 Pa)</option>
-                <option value="ind26k">۷. هواساز صنعتی (26,400 CFM @ 12 Pa)</option>
-              </select>
-            </div>
-
-            <div class="mb-4">
-              <div class="flex justify-between text-xs mb-1">
-                <span class="txt-muted text-slate-300 font-semibold" data-i18n="calcDutyLbl">چرخه کاری پالس (Duty Cycle):</span>
-                <span id="dutyValText" class="font-mono font-bold text-sky-400" dir="ltr">7.5% (0.15s / 2.0s)</span>
-              </div>
-              <input type="range" id="dutySlider" min="5" max="25" step="0.5" value="7.5" class="w-full accent-sky-500 cursor-pointer" oninput="updateCalculator()">
-            </div>
-
-            <div class="space-y-2 bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-xs">
-              <div class="flex justify-between items-center">
-                <span class="text-slate-400">۱. دبی واقعی ($Q$):</span>
-                <span id="outAirflow" class="font-mono font-bold text-white" dir="ltr">3,303 CFM</span>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-sky-300">۲. کار خالص سیال ($P_{fluid}$):</span>
-                <span id="outFluidPower" class="font-mono font-bold text-sky-300" dir="ltr">35.86 W</span>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-amber-300">۳. توان لحظه‌ای پالس ($P_{peak}$):</span>
-                <span id="outPeakPower" class="font-mono font-bold text-amber-300" dir="ltr">343.0 W</span>
-              </div>
-              <div class="flex justify-between items-center border-t border-slate-800 pt-2">
-                <span class="text-emerald-400 font-bold">۴. توان متوسط کنتور ($P_{elec}$):</span>
-                <span id="outAvgPower" class="font-mono font-black text-emerald-400 text-sm" dir="ltr">54.1 W</span>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-rose-400">۵. مصرف سیستم دوار سنتی:</span>
-                <span id="outOldPower" class="font-mono font-bold text-rose-400" dir="ltr">450 W</span>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-emerald-300 font-bold">۶. صرفه‌جویی برق:</span>
-                <span id="outSaved" class="font-mono font-black text-emerald-300" dir="ltr">88.0%</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-3 p-2.5 rounded-lg bg-emerald-950/50 border border-emerald-500/40 text-xs text-emerald-200 leading-relaxed">
-            💡 <strong>تطابق ۱۰۰٪ با ترمودینامیک:</strong> در تمام حالات، $P_{elec} > P_{fluid}$ است و کل انرژی پالس در چرخه کاری ضرب می‌شود ($W_{cycle} = P_{peak} \times t_{pulse}$).
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 5: PARK SWING & CONSERVATION OF ENERGY -->
-    <section class="pro-card p-5 sm:p-6 border-2 border-amber-500/50 avoid-break">
-      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-700 pb-3.5 mb-5">
-        <div class="flex items-center gap-3">
-          <span class="sec-badge bg-amber-500 text-slate-950">4</span>
-          <div>
-            <h2 class="txt-main text-lg sm:text-xl font-black text-white" data-i18n="secSwingTitle">
-              اثبات تصویری مبنای علمی: «نوسان‌گر آونگی (مثال تاب پارک)» و محاسبه کار واقعی سیال
-            </h2>
-            <p class="txt-muted text-xs text-slate-400" data-i18n="secSwingSub">
-              چرا عبور دادن ۱۰۰۰ CFM هوا از پدهای سلولزی با افت فشار ۲۳ تا ۵۰ پاسکال از نظر قوانین فیزیک تنها به ۱۰.۸۵ تا ۲۳.۶ وات کار خالص سیال نیاز دارد، اما فن‌های سنتی ۳۰۰ تا ۴۵۰ وات برق می‌سوزانند؟
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-        <div class="lg:col-span-7 bg-slate-950 rounded-xl border border-slate-800 p-2 flex flex-col justify-between overflow-hidden">
-          <canvas id="foundationCanvas" width="760" height="415" class="w-full h-auto block"></canvas>
-        </div>
-
-        <div class="lg:col-span-5 bg-slate-900/90 rounded-xl p-4 border border-slate-700 flex flex-col justify-between">
-          <div>
-            <div class="font-black text-sky-400 text-sm border-b border-slate-700 pb-2 mb-3 flex justify-between items-center">
-              <span data-i18n="fndCalcHeader">ماشین‌حساب قانون اول ترمودینامیک</span>
-              <span class="text-[11px] font-mono text-emerald-400" dir="ltr">SI Fluid Power</span>
-            </div>
-
-            <div class="mb-3">
-              <div class="text-xs txt-muted text-slate-300 mb-1.5 font-semibold">انتخاب سریع نقاط کارکرد:</div>
-              <div class="grid grid-cols-3 gap-1.5 text-[11px]" dir="ltr">
-                <button onclick="setFluidPreset(771, 23)" class="bg-sky-600/30 hover:bg-sky-600/50 border border-sky-400/50 text-sky-200 font-mono font-bold py-1.5 px-2 rounded transition">771 @ 23 Pa</button>
-                <button onclick="setFluidPreset(1000, 30)" class="bg-amber-600/30 hover:bg-amber-600/50 border border-amber-400/50 text-amber-200 font-mono font-bold py-1.5 px-2 rounded transition">1000 @ 30 Pa</button>
-                <button onclick="setFluidPreset(3303, 23)" class="bg-emerald-600/30 hover:bg-emerald-600/50 border border-emerald-400/50 text-emerald-200 font-mono font-bold py-1.5 px-2 rounded transition">3303 @ 23 Pa</button>
-              </div>
-            </div>
-
-            <div class="space-y-3 mb-3.5">
-              <div>
-                <div class="flex justify-between text-xs mb-1">
-                  <span class="txt-muted text-slate-300 font-semibold">۱. دبی جریان ($Q$):</span>
-                  <span id="fndCfmVal" class="font-mono font-bold text-sky-400" dir="ltr">1,000 CFM</span>
-                </div>
-                <input type="range" id="fndCfmSlider" min="500" max="5000" step="10" value="1000" class="w-full accent-sky-500 cursor-pointer" oninput="updateFluidProof()">
-              </div>
-
-              <div>
-                <div class="flex justify-between text-xs mb-1">
-                  <span class="txt-muted text-slate-300 font-semibold">۲. افت فشار ($\Delta P$):</span>
-                  <span id="fndPaVal" class="font-mono font-bold text-amber-400" dir="ltr">30 Pa</span>
-                </div>
-                <input type="range" id="fndPaSlider" min="10" max="60" step="1" value="30" class="w-full accent-amber-500 cursor-pointer" oninput="updateFluidProof()">
-              </div>
-            </div>
-
-            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2 text-xs">
-              <div class="flex justify-between items-center">
-                <span class="text-slate-400">دبی در SI:</span>
-                <span id="fndOutM3s" class="font-mono font-bold text-white" dir="ltr">Q = 0.472 m³/s</span>
-              </div>
-              <div class="flex justify-between items-center border-t border-slate-800 pt-1.5">
-                <span class="text-emerald-400 font-bold">۱. کار خالص سیال:</span>
-                <span id="fndOutWatts" class="font-mono font-black text-emerald-400 text-sm" dir="ltr">14.16 W</span>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-sky-300 font-semibold">۲. توان ورودی سامانه آزور:</span>
-                <span id="fndOutAzureW" class="font-mono font-bold text-sky-300" dir="ltr">22.1 W</span>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-rose-400">۳. مصرف فن دوار سنتی:</span>
-                <span id="fndOutRotaryW" class="font-mono font-bold text-rose-400" dir="ltr">185.0 W</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-3 p-3 rounded-lg bg-amber-950/50 border border-amber-500/40 text-xs text-amber-100 leading-relaxed">
-            🎯 <strong>برهان قاطع:</strong> وقتی کار فیزیکی لازم برای عبور $1,000\text{ CFM}$ هوا از پد ۳۰ پاسکالی دقیقاً $14.16\text{ W}$ است، مصرف $22.1\text{ W}$ برق در سیستم جابه‌جایی مثبت ما به معنای <strong>راندمان کل ۶۴٪</strong> است، در حالی که فن پره‌ای سنتی بیش از ۱۸۵ وات برق می‌سوزاند!
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 6: FAQ -->
-    <section class="pro-card p-5 sm:p-6 border-2 border-purple-500/40 avoid-break">
-      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-700 pb-3.5 mb-4">
-        <div class="flex items-center gap-3">
-          <span class="sec-badge bg-purple-500 text-white">5</span>
-          <div>
-            <h2 class="txt-main text-lg sm:text-xl font-black text-white" data-i18n="sec4Title">
-              پاسخ علمی به چالش‌های مهندسان (بر پایه تحلیل ۱۱۵ کامنت مستند)
-            </h2>
-          </div>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
-        <div class="bg-slate-900/85 p-4 rounded-xl border-r-4 border-rose-500 flex flex-col justify-between">
-          <div>
-            <div class="font-black text-rose-400 mb-1.5">
-              ❓ ۱. «چرا از موتور BLDC با باتری ۳۰ واتی استفاده نمی‌کنید؟»
-            </div>
-            <p class="txt-muted text-slate-200 leading-relaxed">
-              <strong>✅ پاسخ:</strong> مشکل راندمان الکتریکی نیست، بلکه <strong>سد آیرودینامیکی</strong> است. وقتی فن را پشت پد مرطوب می‌گذارید، خلأ ایجاد شده باعث لغزش هوا روی پره‌ها (Stall) می‌شود. راندمان به ۱۰٪ سقوط می‌کند و موتور برای ۱۶ وات کار مفید، به ۱۶۰ وات برق نیاز پیدا می‌کند که باتری را در ۵ دقیقه خالی می‌کند. اختراع ما با حذف پروانه، این لغزش را صفر کرده است.
-            </p>
-          </div>
-          <div class="mt-2.5 pt-2 border-t border-slate-800 text-[11px] font-mono text-emerald-400" dir="ltr">
-            Aerodynamic Stall at High ΔP = Rotary Failure
-          </div>
-        </div>
-
-        <div class="bg-slate-900/85 p-4 rounded-xl border-r-4 border-amber-500 flex flex-col justify-between">
-          <div>
-            <div class="font-black text-amber-400 mb-1.5">
-              ❓ ۲. «آیا این سیستم مثل یک جت‌فن چندمرحله‌ای نیست؟»
-            </div>
-            <p class="txt-muted text-slate-200 leading-relaxed">
-              <strong>✅ پاسخ:</strong> خیر، هر نوع سیستم دوار (حتی جت‌فن) وقتی پشت مقاومت سنگین پد قرار می‌گیرد، دچار واماندگی می‌شود. راه‌حل ثبت‌شده ما حذف کامل پروانه و شفت چرخشی است. دستگاه ما از یک مکانیزم بال مکشی نوسانی استفاده می‌کند که مثل یک پمپ جابجایی مثبت، هوا را به صورت ضربه‌ای بیرون می‌کشد.
-            </p>
-          </div>
-          <div class="mt-2.5 pt-2 border-t border-slate-800 text-[11px] font-mono text-amber-300" dir="ltr">
-            Positive Displacement vs. Rotary Aerodynamics
-          </div>
-        </div>
-
-        <div class="bg-slate-900/85 p-4 rounded-xl border-r-4 border-sky-500 flex flex-col justify-between">
-          <div>
-            <div class="font-black text-sky-400 mb-1.5">
-              ❓ ۳. «منحنی فشار استاتیکی و بحث یون‌سازی چطور است؟»
-            </div>
-            <p class="txt-muted text-slate-200 leading-relaxed">
-              <strong>✅ پاسخ:</strong> رفتار فشار استاتیک ما مثل فن‌های دوار نیست که زیر بار خفه شوند؛ ما در هر ضربه، هوا را بدون لغزش پرتاب می‌کنیم. همچنین چون سیستم کاملاً مکانیکی است و از الکترواستاتیک استفاده نمی‌کند، هیچ یون یا اوزون مضری تولید نمی‌شود. پمپ آب برقی نیز حذف شده و با انرژی گرانشی کار می‌کند.
-            </p>
-          </div>
-          <div class="mt-2.5 pt-2 border-t border-slate-800 text-[11px] font-mono text-sky-300" dir="ltr">
-            Zero Ozone / Zero Electric Pump / High Static Pressure
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 7: PATSNAP & VALUATION -->
-    <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 avoid-break">
-      <div class="lg:col-span-6 pro-card p-5 border-t-4 border-emerald-500 flex flex-col justify-between">
-        <div>
-          <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-3.5">
-            <div class="flex items-center gap-2.5">
-              <span class="sec-badge bg-emerald-500 text-slate-950">6</span>
-              <h3 class="txt-main text-base font-black text-white">
-                گزارش ممیزی جهانی PatSnap (تضمین اصالت PCT)
-              </h3>
-            </div>
-            <span class="text-xs font-mono bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded font-bold" dir="ltr">0 X / 0 Y</span>
-          </div>
-          <p class="txt-muted text-xs text-slate-300 mb-3">
-            بررسی ۱۰۰ پتنت جهانی و ۵۰ مقاله علمی طی ۲۸ دور جستجو در پایگاه PatSnap آمریکا:
-          </p>
-          <table class="pro-table">
-            <thead>
-              <tr>
-                <th>کد</th>
-                <th>ویژگی ادعانامه</th>
-                <th dir="ltr">US5771693A</th>
-                <th dir="ltr">US8943851B2</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="font-mono text-center" dir="ltr">e ★</td>
-                <td class="text-emerald-200">محرک پالسی نوک بال با شتاب $\ge 8\text{ m/s}^2$</td>
-                <td class="text-center font-black text-emerald-400" dir="ltr">NOVEL</td>
-                <td class="text-center font-black text-emerald-400" dir="ltr">NOVEL</td>
-              </tr>
-              <tr>
-                <td class="font-mono text-center" dir="ltr">i ★</td>
-                <td class="text-emerald-200">اتصال جداشونده سپر یک‌طرفه در میانه مسیر</td>
-                <td class="text-center font-black text-emerald-400" dir="ltr">NOVEL</td>
-                <td class="text-center font-black text-emerald-400" dir="ltr">NOVEL</td>
-              </tr>
-              <tr>
-                <td class="font-mono text-center" dir="ltr">m ★</td>
-                <td class="text-emerald-200">پدل آیرودینامیکی نوک بال + دیفیوزر جانبی</td>
-                <td class="text-center font-black text-emerald-400" dir="ltr">NOVEL</td>
-                <td class="text-center font-black text-emerald-400" dir="ltr">NOVEL</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="lg:col-span-6 pro-card p-5 border-t-4 border-amber-500 flex flex-col justify-between">
-        <div>
-          <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-3.5">
-            <div class="flex items-center gap-2.5">
-              <span class="sec-badge bg-amber-500 text-slate-950">7</span>
-              <h3 class="txt-main text-base font-black text-white">
-                ارزش‌گذاری IP و مدل‌های سرمایه‌گذاری
-              </h3>
-            </div>
-            <span class="text-xs font-mono bg-amber-500/20 text-amber-300 px-2.5 py-1 rounded font-bold" dir="ltr">$20M–$35M Pre-Money</span>
-          </div>
-          <table class="pro-table">
-            <thead>
-              <tr>
-                <th>سطح</th>
-                <th>سرمایه</th>
-                <th>سهام</th>
-                <th>دامنه حقوق</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="font-bold text-sky-300">۱. SPV منطقه‌ای</td>
-                <td class="text-center font-mono" dir="ltr">$500k – $1M</td>
-                <td class="text-center">۱۵–۲۵٪</td>
-                <td>تولید صنعتی برای ایران و صادرات</td>
-              </tr>
-              <tr class="bg-emerald-950/40">
-                <td class="font-bold text-emerald-300">۲. HoldCo جهانی</td>
-                <td class="text-center font-mono" dir="ltr">$1.5M – $3M</td>
-                <td class="text-center text-emerald-400">۵–۱۰٪</td>
-                <td>سبد ۵ پتنت: $20M–$35M</td>
-              </tr>
-              <tr class="bg-amber-950/40">
-                <td class="font-bold text-amber-300">۳. OEM Licensing</td>
-                <td class="text-center font-mono" dir="ltr">Upfront + Royalty</td>
-                <td class="text-center text-amber-300">۳–۵٪</td>
-                <td>NPV: $150M–$350M+</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="mt-4 bg-slate-950 p-3.5 rounded-xl border border-slate-700 flex flex-wrap items-center justify-between gap-2 text-xs" dir="ltr" style="font-family: 'Inter', sans-serif;">
-          <div>
-            <span class="text-amber-400 font-black uppercase">Direct Contact:</span>
-            <span class="text-white font-bold ml-1">Eng. Fayag Azure</span> |
-            <span class="text-sky-300 font-mono">✉️ fayagazure@gmail.com</span>
-          </div>
-          <div class="text-[11px] text-slate-400 font-mono">
-            LinkedIn: in/fayeghazour | IG: @iraninventors
-          </div>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <script>
-    // =========================================================================
-    // 1. THREE.JS INTERACTIVE 3D CAD SIMULATOR (7 CONFIGURATIONS)
-    // =========================================================================
-    const catalogData3D = {
-      'cradle': {
-        title: '۱. کولر و تهویه گهواره‌ای (پتنت ۱۱۳۷۶۱)',
-        sub: '3,303 CFM | مصرف ۲۵ وات (تهویه) و ۵۴.۱ وات (کولر با پد)',
-        desc: 'پانل کامپوزیتی سبک از رأس منشور آویزان بوده و با فرکانس ۰.۵ هرتز نوسان می‌کند. در هر نیم‌سیکل، از یک سمت هوا را از خلال پد سلولزی مکیده و همزمان از سمت دیگر هوای خنک را از طریق دمپر مقعر به کانال دهش می‌کند.',
-        blueprint: 'AZ-KIN-01 | Patent #113761',
-        kin: 'cradle', inFlow: 'side', outFlow: 'front', pad: 'cell',
-        kinText: 'نوسان آونگی فوقانی (0.5 Hz)', inText: 'مکش دوطرفه از پدهای سلولزی', outText: 'دمپر مقعر یک‌طرفه جلویی', apps: 'کولر آبی ۳۵۰۰ خانگی و تهویه ساختمانی',
-        cIn: [1.0, 0.25, 0.25], cOut: [0.15, 0.85, 1.0]
-      },
-      'omni_exhaust': {
-        title: '۲. ونتیلاتور بام (مکش از کف + تخلیه ۳۶۰ درجه)',
-        sub: 'اگزاست مرکزی با خروجی ۴‌جانبه و افت فشار خروجی نزدیک به صفر',
-        desc: 'دستگاه مستقیماً روی رایزر یا داکت عمودی ساختمان می‌نشیند. هوا منحصراً از کف مکیده شده و به کمک ۲ دمپر مقعر (جلو و پشت) و لوورهای یک‌طرفه جانبی، در ۴ جهت به بیرون تخلیه می‌شود.',
-        blueprint: 'AZ-ARCH-01 | Omnidirectional Exhaust',
-        kin: 'cradle', inFlow: 'bottom', outFlow: 'omni', pad: 'duct',
-        kinText: 'آونگ فوقانی', inText: 'مکش عمودی از داکت کف', outText: 'تخلیه ۳۶۰ درجه چهارطرفه', apps: 'اگزاست فن مرکزی ساختمان و تخلیه دود پارکینگ',
-        cIn: [1.0, 0.45, 0.0], cOut: [0.2, 0.9, 0.5]
-      },
-      'dual_damper': {
-        title: '۳. هواساز دوگانه سوله (Dual Damper)',
-        sub: 'مکش از پهلوها، دهش همزمان به جلو و پشت',
-        desc: 'مناسب برای نصب در مرکز سوله‌های صنعتی، مرغداری‌ها و سالن‌های ورزشی. دیواره پشتی نیز به دمپر مقعر دوم مجهز شده تا هوا را از پهلوها مکیده و به دو سمت سالن پرتاب کند.',
-        blueprint: 'AZ-ARCH-02 | Dual-Axis Exhaust',
-        kin: 'cradle', inFlow: 'side', outFlow: 'dual', pad: 'cell',
-        kinText: 'آونگ فوقانی', inText: 'پد سلولزی از پهلوها', outText: 'پرتاب دوطرفه (جلو و پشت)', apps: 'مرغداری‌ها، گلخانه‌ها و سوله‌های صنعتی',
-        cIn: [1.0, 0.2, 0.2], cOut: [0.2, 0.8, 1.0]
-      },
-      'linear': {
-        title: '۴. پیستون خطی (ریلی بدون لولا)',
-        sub: 'حرکت خطی مستقیم برای غلبه بر افت فشارهای بالا',
-        desc: 'پانل به صورت کاملاً عمود روی ریل‌های کم‌اصطکاک به چپ و راست حرکت می‌کند و فشار استاتیکی یکنواختی در تمام سطح مقطع داکت ایجاد می‌نماید.',
-        blueprint: 'AZ-KIN-02 | Linear Displacement',
-        kin: 'linear', inFlow: 'side', outFlow: 'front', pad: 'cell',
-        kinText: 'حرکت خطی پیستونی', inText: 'مکش از پهلوها', outText: 'دمپر مقعر جلویی', apps: 'کانال‌های طولانی با افت فشار استاتیکی بالا',
-        cIn: [1.0, 0.2, 0.2], cOut: [0.2, 0.8, 1.0]
-      },
-      'butterfly': {
-        title: '۵. پروانه‌ای مرکز-محور (متعادل دینامیکی)',
-        sub: 'لولا در مرکز جرم پانل — حذف کامل ارتعاش سازه‌ای',
-        desc: 'محور چرخش دقیقاً از مرکز جرم پانل عبور می‌کند؛ بنابراین گشتاور استاتیکی وزن صفر بوده و با کمترین ضربه پالسی، جابه‌جایی حجمی دوطرفه انجام می‌شود.',
-        blueprint: 'AZ-KIN-03 | Balanced Center Pivot',
-        kin: 'butterfly', inFlow: 'side', outFlow: 'front', pad: 'cell',
-        kinText: 'چرخش حول محور مرکزی', inText: 'مکش از پهلوها', outText: 'دمپر مقعر جلویی', apps: 'سیستم‌های تهویه بیمارستانی و مبدل حرارتی',
-        cIn: [1.0, 0.2, 0.2], cOut: [0.2, 0.8, 1.0]
-      },
-      'thermo_dehumid': {
-        title: '۶. کولر رطوبت‌گیر دولایه (مناطق شرجی)',
-        sub: 'لایه اول جاذب رطوبت (دسیکانت) + لایه دوم پد تبخیری',
-        desc: 'ویژه اقلیم‌های مرطوب؛ هوای شرجی ابتدا از شبکه جاذب رطوبت عبور کرده و پس از خشک شدن، در برخورد با پد سلولزی خنک می‌شود.',
-        blueprint: 'AZ-THM-01 | Desiccant + Evaporative',
-        kin: 'cradle', inFlow: 'side', outFlow: 'front', pad: 'desiccant',
-        kinText: 'آونگ فوقانی', inText: 'دسیکانت + پد سلولزی', outText: 'دمپر مقعر جلویی', apps: 'مناطق ساحلی شمال و جنوب کشور',
-        cIn: [0.85, 0.25, 0.85], cOut: [0.3, 0.95, 1.0]
-      },
-      'thermo_purifier': {
-        title: '۷. هواساز تصفیه استریل (فیلتر HEPA)',
-        sub: 'غلبه پیستونی بر افت فشار فیلترهای پزشکی هپا',
-        desc: 'به دلیل خاصیت جابه‌جایی مثبت پیستونی، دستگاه بدون واماندگی (Stall) هوا را از فیلترهای متراکم هپا عبور داده و محیط را با مصرف زیر ۳۰ وات استریل می‌کند.',
-        blueprint: 'AZ-THM-02 | Medical HEPA Filtration',
-        kin: 'cradle', inFlow: 'side', outFlow: 'front', pad: 'hepa',
-        kinText: 'آونگ فوقانی', inText: 'فیلتر هپا (HEPA)', outText: 'دمپر مقعر جلویی', apps: 'اتاق تمیز، بیمارستان‌ها و دیتاسنترها',
-        cIn: [0.6, 0.6, 0.6], cOut: [0.15, 1.0, 0.45]
-      }
-    };
-
-    let scene3D, camera3D, renderer3D, controls3D, chamberGroup3D;
-    let currentConfig3D = null;
-    let dynamicParts3D = { panelPivot: null, panelMesh: null, frontDamper: null, backDamper: null, leftLouvers: [], rightLouvers: [], bottomLouvers: [], sideExhaustLeft: [], sideExhaustRight: [] };
-    let damperMaxAngle3D = 0, wingW3D = 0, time3D = 0, currentDamperAngle3D = 0;
-    let pSystem3D, pData3D = [];
-    const pCount3D = 650;
-    const L3 = 2.4, H3 = 1.5, D3 = 1.2, hL3 = L3/2, hH3 = H3/2, hD3 = D3/2;
-
-    function init3DSimulator() {
-      const container = document.getElementById('three-container');
-      const canvas3 = document.getElementById('webgl-canvas');
-      if (!container || !canvas3 || typeof THREE === 'undefined') return;
-
-      renderer3D = new THREE.WebGLRenderer({ canvas: canvas3, antialias: true, alpha: true });
-      renderer3D.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      renderer3D.setSize(container.clientWidth, container.clientHeight);
-
-      scene3D = new THREE.Scene();
-      scene3D.fog = new THREE.FogExp2(0x020617, 0.04);
-
-      camera3D = new THREE.PerspectiveCamera(44, container.clientWidth / container.clientHeight, 0.1, 100);
-      camera3D.position.set(-4.8, 3.6, 5.6);
-
-      controls3D = new THREE.OrbitControls(camera3D, renderer3D.domElement);
-      controls3D.enableDamping = true;
-      controls3D.dampingFactor = 0.06;
-
-      scene3D.add(new THREE.AmbientLight(0xffffff, 0.65));
-      const dLight1 = new THREE.DirectionalLight(0xffffff, 1.0);
-      dLight1.position.set(5, 10, 7);
-      scene3D.add(dLight1);
-      const dLight2 = new THREE.DirectionalLight(0x38bdf8, 0.55);
-      dLight2.position.set(-5, 2, -5);
-      scene3D.add(dLight2);
-
-      chamberGroup3D = new THREE.Group();
-      scene3D.add(chamberGroup3D);
-
-      const pGeo = new THREE.BufferGeometry();
-      const pPos = new Float32Array(pCount3D * 6);
-      const pCol = new Float32Array(pCount3D * 6);
-      pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-      pGeo.setAttribute('color', new THREE.BufferAttribute(pCol, 3));
-      const pMat = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending });
-      pSystem3D = new THREE.LineSegments(pGeo, pMat);
-      scene3D.add(pSystem3D);
-      pData3D = Array.from({ length: pCount3D }, () => ({ active: false, life: 0, x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, isHot: true }));
-
-      const btnContainer = document.getElementById('model-buttons-container');
-      Object.keys(catalogData3D).forEach(key => {
-        const item = catalogData3D[key];
-        const btn = document.createElement('button');
-        btn.id = 'btn3d-' + key;
-        btn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold border transition bg-slate-900 border-slate-700 text-slate-300 hover:text-white';
-        btn.innerText = item.title;
-        btn.onclick = () => load3DModel(key);
-        btnContainer.appendChild(btn);
-      });
-
-      document.getElementById('btn-cam-reset').onclick = () => {
-        if (currentConfig3D && currentConfig3D.inFlow === 'bottom') camera3D.position.set(-5.5, -2.5, 5.5);
-        else camera3D.position.set(-4.8, 3.6, 5.6);
-        controls3D.target.set(0, 0, 0);
-      };
-
-      window.addEventListener('resize', () => {
-        if (!container.clientWidth) return;
-        camera3D.aspect = container.clientWidth / container.clientHeight;
-        camera3D.updateProjectionMatrix();
-        renderer3D.setSize(container.clientWidth, container.clientHeight);
-      });
-
-      load3DModel('cradle');
-    }
-
-    function buildConcaveDamper3D(zPos, rotY, matDamper) {
-      const pivot = new THREE.Group();
-      pivot.position.set(0, 0, zPos);
-      const curveDepth = 0.22;
-      const exW = hL3 - 0.1;
-      wingW3D = exW * 1.05;
-      const shape = new THREE.Shape();
-      shape.moveTo(-wingW3D, curveDepth);
-      shape.quadraticCurveTo(0, 0, wingW3D, curveDepth);
-      shape.lineTo(wingW3D, curveDepth + 0.02);
-      shape.quadraticCurveTo(0, 0.02, -wingW3D, curveDepth + 0.02);
-      shape.lineTo(-wingW3D, curveDepth);
-
-      const dGeo = new THREE.ExtrudeGeometry(shape, { depth: H3 * 0.94, bevelEnabled: false });
-      dGeo.translate(0, 0, -(H3 * 0.94) / 2);
-      const dMesh = new THREE.Mesh(dGeo, matDamper);
-      dMesh.rotation.x = Math.PI / 2;
-      pivot.add(dMesh);
-      pivot.rotation.y = rotY;
-      return pivot;
-    }
-
-    function load3DModel(id) {
-      currentConfig3D = catalogData3D[id];
-      Object.keys(catalogData3D).forEach(k => {
-        const b = document.getElementById('btn3d-' + k);
-        if (b) {
-          b.className = (k === id)
-            ? 'px-3 py-1.5 rounded-lg text-xs font-bold border transition bg-sky-600 border-sky-400 text-white shadow-lg'
-            : 'px-3 py-1.5 rounded-lg text-xs font-bold border transition bg-slate-900 border-slate-700 text-slate-300 hover:text-white';
-        }
-      });
-
-      document.getElementById('ui3d-title').innerText = currentConfig3D.title;
-      document.getElementById('ui3d-sub').innerText = currentConfig3D.sub;
-      document.getElementById('ui3d-desc').innerText = currentConfig3D.desc;
-      document.getElementById('ui3d-blueprint').innerText = currentConfig3D.blueprint;
-      document.getElementById('ui3d-kin').innerText = currentConfig3D.kinText;
-      document.getElementById('ui3d-in').innerText = currentConfig3D.inText;
-      document.getElementById('ui3d-out').innerText = currentConfig3D.outText;
-      document.getElementById('ui3d-apps').innerText = currentConfig3D.apps;
-
-      scene3D.remove(chamberGroup3D);
-      chamberGroup3D = new THREE.Group();
-      scene3D.add(chamberGroup3D);
-      dynamicParts3D = { panelPivot: null, panelMesh: null, frontDamper: null, backDamper: null, leftLouvers: [], rightLouvers: [], bottomLouvers: [], sideExhaustLeft: [], sideExhaustRight: [] };
-
-      const matGlass = new THREE.MeshPhysicalMaterial({ color: 0x94a3b8, transparent: true, opacity: 0.15, depthWrite: false, side: THREE.DoubleSide });
-      const matPanel = new THREE.MeshPhysicalMaterial({ color: 0x0ea5e9, transparent: true, opacity: 0.82, side: THREE.DoubleSide });
-      const matDamper = new THREE.MeshPhysicalMaterial({ color: 0xf59e0b, roughness: 0.2, clearcoat: 0.8, side: THREE.DoubleSide });
-      const matLouver = new THREE.MeshStandardMaterial({ color: 0x1e293b, side: THREE.DoubleSide });
-      const matPad = new THREE.MeshStandardMaterial({ color: 0x8b5a2b, transparent: true, opacity: 0.82 });
-      const matHepa = new THREE.MeshStandardMaterial({ color: 0xf8fafc });
-      const matDesiccant = new THREE.MeshStandardMaterial({ color: 0xf97316, wireframe: true });
-      const matDuct = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.8, roughness: 0.5 });
-
-      const edges = new THREE.EdgesGeometry(new THREE.BoxGeometry(L3, H3, D3));
-      chamberGroup3D.add(new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.3 })));
-
-      const wTop = new THREE.Mesh(new THREE.PlaneGeometry(L3, D3), matGlass);
-      wTop.rotation.x = Math.PI / 2;
-      wTop.position.y = hH3;
-      chamberGroup3D.add(wTop);
-
-      if (currentConfig3D.inFlow === 'bottom') {
-        const duct = new THREE.Mesh(new THREE.BoxGeometry(L3 * 0.9, 1.0, D3 * 0.9), matDuct);
-        duct.position.set(0, -hH3 - 0.5, 0);
-        chamberGroup3D.add(duct);
-        const fCount = 8, fW = hL3 / fCount;
-        for (let i = 0; i < fCount; i++) {
-          const lx = -hL3 + (i * fW) + fW / 2;
-          const lL = new THREE.Mesh(new THREE.PlaneGeometry(fW * 0.9, D3 * 0.9), matLouver);
-          lL.rotation.x = -Math.PI / 2;
-          const lp = new THREE.Group();
-          lp.position.set(lx - fW / 2, -hH3, 0);
-          lL.position.x = fW / 2;
-          lp.add(lL);
-          chamberGroup3D.add(lp);
-          dynamicParts3D.bottomLouvers.push({ mesh: lp, side: 'left' });
-
-          const rx = (i * fW) + fW / 2;
-          const rL = new THREE.Mesh(new THREE.PlaneGeometry(fW * 0.9, D3 * 0.9), matLouver);
-          rL.rotation.x = -Math.PI / 2;
-          const rp = new THREE.Group();
-          rp.position.set(rx + fW / 2, -hH3, 0);
-          rL.position.x = -fW / 2;
-          rp.add(rL);
-          chamberGroup3D.add(rp);
-          dynamicParts3D.bottomLouvers.push({ mesh: rp, side: 'right' });
-        }
-      } else {
-        const wBot = new THREE.Mesh(new THREE.PlaneGeometry(L3, D3), matGlass);
-        wBot.rotation.x = -Math.PI / 2;
-        wBot.position.y = -hH3;
-        chamberGroup3D.add(wBot);
-      }
-
-      if (currentConfig3D.outFlow === 'omni' || currentConfig3D.outFlow === 'dual') {
-        dynamicParts3D.backDamper = buildConcaveDamper3D(-hD3 - 0.02, Math.PI, matDamper);
-        chamberGroup3D.add(dynamicParts3D.backDamper);
-      } else {
-        const wBack = new THREE.Mesh(new THREE.PlaneGeometry(L3, H3), matGlass);
-        wBack.position.z = -hD3;
-        chamberGroup3D.add(wBack);
-      }
-
-      if (currentConfig3D.inFlow === 'side') {
-        const lCount = 6, lH = H3 / lCount;
-        for (let i = 0; i < lCount; i++) {
-          const y = -hH3 + (i * lH) + lH / 2;
-          const ll = new THREE.Mesh(new THREE.PlaneGeometry(D3 * 0.9, lH * 0.8), matLouver);
-          ll.rotation.y = -Math.PI / 2;
-          const lp = new THREE.Group();
-          lp.position.set(-hL3 + 0.15, y, 0);
-          ll.position.x = lH / 2;
-          lp.add(ll);
-          chamberGroup3D.add(lp);
-          dynamicParts3D.leftLouvers.push(lp);
-
-          const rl = new THREE.Mesh(new THREE.PlaneGeometry(D3 * 0.9, lH * 0.8), matLouver);
-          rl.rotation.y = Math.PI / 2;
-          const rp = new THREE.Group();
-          rp.position.set(hL3 - 0.15, y, 0);
-          rl.position.x = -lH / 2;
-          rp.add(rl);
-          chamberGroup3D.add(rp);
-          dynamicParts3D.rightLouvers.push(rp);
-        }
-
-        if (currentConfig3D.pad === 'cell') {
-          const pL = new THREE.Mesh(new THREE.BoxGeometry(0.08, H3 * 0.98, D3 * 0.98), matPad);
-          pL.position.x = -hL3 + 0.04;
-          chamberGroup3D.add(pL);
-          const pR = new THREE.Mesh(new THREE.BoxGeometry(0.08, H3 * 0.98, D3 * 0.98), matPad);
-          pR.position.x = hL3 - 0.04;
-          chamberGroup3D.add(pR);
-        } else if (currentConfig3D.pad === 'hepa') {
-          const pL = new THREE.Mesh(new THREE.BoxGeometry(0.12, H3 * 0.98, D3 * 0.98), matHepa);
-          pL.position.x = -hL3 + 0.06;
-          chamberGroup3D.add(pL);
-          const pR = new THREE.Mesh(new THREE.BoxGeometry(0.12, H3 * 0.98, D3 * 0.98), matHepa);
-          pR.position.x = hL3 - 0.06;
-          chamberGroup3D.add(pR);
-        } else if (currentConfig3D.pad === 'desiccant') {
-          const dL = new THREE.Mesh(new THREE.BoxGeometry(0.04, H3 * 0.98, D3 * 0.98), matDesiccant);
-          dL.position.x = -hL3 - 0.02;
-          chamberGroup3D.add(dL);
-          const pL = new THREE.Mesh(new THREE.BoxGeometry(0.06, H3 * 0.98, D3 * 0.98), matPad);
-          pL.position.x = -hL3 + 0.03;
-          chamberGroup3D.add(pL);
-          const dR = new THREE.Mesh(new THREE.BoxGeometry(0.04, H3 * 0.98, D3 * 0.98), matDesiccant);
-          dR.position.x = hL3 + 0.02;
-          chamberGroup3D.add(dR);
-          const pR = new THREE.Mesh(new THREE.BoxGeometry(0.06, H3 * 0.98, D3 * 0.98), matPad);
-          pR.position.x = hL3 - 0.03;
-          chamberGroup3D.add(pR);
-        }
-      } else if (currentConfig3D.outFlow === 'omni') {
-        const lCount = 6, lH = H3 / lCount;
-        for (let i = 0; i < lCount; i++) {
-          const y = -hH3 + (i * lH) + lH / 2;
-          const ll = new THREE.Mesh(new THREE.PlaneGeometry(D3 * 0.9, lH * 0.8), matLouver);
-          ll.rotation.y = -Math.PI / 2;
-          const lp = new THREE.Group();
-          lp.position.set(-hL3, y + lH / 2, 0);
-          ll.position.y = -lH / 2;
-          lp.add(ll);
-          chamberGroup3D.add(lp);
-          dynamicParts3D.sideExhaustLeft.push(lp);
-
-          const rl = new THREE.Mesh(new THREE.PlaneGeometry(D3 * 0.9, lH * 0.8), matLouver);
-          rl.rotation.y = Math.PI / 2;
-          const rp = new THREE.Group();
-          rp.position.set(hL3, y + lH / 2, 0);
-          rl.position.y = -lH / 2;
-          rp.add(rl);
-          chamberGroup3D.add(rp);
-          dynamicParts3D.sideExhaustRight.push(rp);
-        }
-      }
-
-      dynamicParts3D.frontDamper = buildConcaveDamper3D(hD3 + 0.02, 0, matDamper);
-      chamberGroup3D.add(dynamicParts3D.frontDamper);
-      damperMaxAngle3D = Math.atan(0.22 / (hL3 * 1.05));
-
-      dynamicParts3D.panelPivot = new THREE.Group();
-      chamberGroup3D.add(dynamicParts3D.panelPivot);
-      dynamicParts3D.panelMesh = new THREE.Mesh(new THREE.BoxGeometry(0.025, H3 * 0.96, D3 * 0.96), matPanel);
-
-      if (currentConfig3D.kin === 'cradle') {
-        dynamicParts3D.panelPivot.position.set(0, hH3, 0);
-        dynamicParts3D.panelMesh.position.y = -hH3;
-        dynamicParts3D.panelPivot.add(dynamicParts3D.panelMesh);
-      } else {
-        dynamicParts3D.panelPivot.position.set(0, 0, 0);
-        dynamicParts3D.panelPivot.add(dynamicParts3D.panelMesh);
-      }
-    }
-
-    function spawnParticle3D(type, isRight) {
-      const idx = pData3D.findIndex(p => !p.active);
-      if (idx === -1) return;
-      const p = pData3D[idx];
-      p.active = true;
-      p.life = 1.0;
-      p.isHot = (type === 'IN');
-      const sign = isRight ? 1 : -1;
-
-      if (type === 'IN') {
-        if (currentConfig3D.inFlow === 'bottom') {
-          p.x = (sign === -1) ? (Math.random() * hL3 * 0.8) : (-Math.random() * hL3 * 0.8);
-          p.y = -hH3 - 0.5 - Math.random() * 0.5;
-          p.z = (Math.random() - 0.5) * D3 * 0.8;
-          p.vx = (Math.random() - 0.5) * 0.4;
-          p.vy = 2.0 + Math.random() * 1.8;
-          p.vz = (Math.random() - 0.5) * 0.4;
-        } else {
-          p.x = (hL3 * sign) + (sign * 0.2);
-          p.y = (Math.random() - 0.5) * H3 * 0.8;
-          p.z = (Math.random() - 0.5) * D3 * 0.8;
-          p.vx = -sign * (1.5 + Math.random());
-          p.vy = (Math.random() - 0.5) * 0.4;
-          p.vz = (Math.random() - 0.5) * 0.4;
-        }
-      } else {
-        p.x = (wingW3D * sign) + (sign * Math.random() * 0.05);
-        p.y = -hH3 + 0.1 + (Math.random() * H3 * 0.8);
-        p.z = (currentConfig3D.outFlow === 'dual' && Math.random() > 0.5) ? (-hD3 - 0.25) : (hD3 + 0.25);
-        p.vx = sign * (0.8 + Math.random() * 1.4);
-        p.vy = (Math.random() - 0.5) * 0.4;
-        p.vz = (p.z > 0 ? 1 : -1) * (2.8 + Math.random() * 1.8);
-      }
-    }
-
-    function step3DSimulator(dt) {
-      if (!renderer3D || !currentConfig3D || !dynamicParts3D.panelPivot) return;
-      controls3D.update();
-      time3D += dt * 3.2;
-
-      let isMovingRight = false;
-      let pressureMag = 0;
-
-      if (currentConfig3D.kin === 'cradle') {
-        dynamicParts3D.panelPivot.rotation.z = Math.sin(time3D) * (34 * Math.PI / 180);
-        const phaseVel = Math.cos(time3D);
-        isMovingRight = phaseVel > 0;
-        pressureMag = Math.abs(phaseVel);
-      } else if (currentConfig3D.kin === 'linear') {
-        dynamicParts3D.panelPivot.position.x = Math.sin(time3D) * (hL3 - 0.2);
-        const phaseVel = Math.cos(time3D);
-        isMovingRight = phaseVel > 0;
-        pressureMag = Math.abs(phaseVel);
-      } else if (currentConfig3D.kin === 'butterfly') {
-        dynamicParts3D.panelPivot.rotation.y = Math.sin(time3D) * (42 * Math.PI / 180);
-        const phaseVel = Math.cos(time3D);
-        isMovingRight = phaseVel > 0;
-        pressureMag = Math.abs(phaseVel);
-      }
-
-      if (currentConfig3D.inFlow === 'side') {
-        dynamicParts3D.leftLouvers.forEach(l => { l.rotation.z += ((isMovingRight ? Math.PI / 3 : 0) - l.rotation.z) * 14 * dt; });
-        dynamicParts3D.rightLouvers.forEach(l => { l.rotation.z += ((!isMovingRight ? -Math.PI / 3 : 0) - l.rotation.z) * 14 * dt; });
-      } else if (currentConfig3D.inFlow === 'bottom') {
-        dynamicParts3D.bottomLouvers.forEach(l => {
-          if (l.side === 'left') l.mesh.rotation.z += ((isMovingRight ? -Math.PI / 3 : 0) - l.mesh.rotation.z) * 14 * dt;
-          else l.mesh.rotation.z += ((!isMovingRight ? Math.PI / 3 : 0) - l.mesh.rotation.z) * 14 * dt;
-        });
-      }
-
-      const targetDamperAngle = isMovingRight ? -damperMaxAngle3D : damperMaxAngle3D;
-      currentDamperAngle3D += (targetDamperAngle - currentDamperAngle3D) * 14 * dt * Math.min(1, pressureMag * 2);
-      if (dynamicParts3D.frontDamper) dynamicParts3D.frontDamper.rotation.y = currentDamperAngle3D;
-      if (dynamicParts3D.backDamper) dynamicParts3D.backDamper.rotation.y = currentDamperAngle3D + Math.PI;
-
-      if (pressureMag > 0.1 && Math.random() > 0.25) {
-        if (isMovingRight) { spawnParticle3D('IN', false); spawnParticle3D('OUT', true); }
-        else { spawnParticle3D('IN', true); spawnParticle3D('OUT', false); }
-      }
-
-      const pos = pSystem3D.geometry.attributes.position.array;
-      const col = pSystem3D.geometry.attributes.color.array;
-      for (let i = 0; i < pCount3D; i++) {
-        const p = pData3D[i];
-        if (p.active) {
-          p.x += p.vx * dt;
-          p.y += p.vy * dt;
-          p.z += p.vz * dt;
-          p.life -= (p.isHot ? 1.5 : 1.0) * dt;
-          if (p.isHot && currentConfig3D.inFlow === 'side' && ((p.vx > 0 && p.x > 0) || (p.vx < 0 && p.x < 0))) p.life = 0;
-
-          const tL = 0.15;
-          pos[i * 6] = p.x; pos[i * 6 + 1] = p.y; pos[i * 6 + 2] = p.z;
-          pos[i * 6 + 3] = p.x - p.vx * tL; pos[i * 6 + 4] = p.y - p.vy * tL; pos[i * 6 + 5] = p.z - p.vz * tL;
-
-          const op = Math.max(0, p.life);
-          const rgb = p.isHot ? currentConfig3D.cIn : currentConfig3D.cOut;
-          col[i * 6] = rgb[0]; col[i * 6 + 1] = rgb[1]; col[i * 6 + 2] = rgb[2];
-          col[i * 6 + 3] = rgb[0] * op * 0.3; col[i * 6 + 4] = rgb[1] * op * 0.3; col[i * 6 + 5] = rgb[2] * op * 0.3;
-
-          if (p.life <= 0) {
-            p.active = false;
-            pos[i * 6] = pos[i * 6 + 3] = pos[i * 6 + 1] = pos[i * 6 + 4] = pos[i * 6 + 2] = pos[i * 6 + 5] = 0;
-          }
-        }
-      }
-      pSystem3D.geometry.attributes.position.needsUpdate = true;
-      pSystem3D.geometry.attributes.color.needsUpdate = true;
-      renderer3D.render(scene3D, camera3D);
-    }
-
-    // =========================================================================
-    // 2. TRILINGUAL DICTIONARY & THERMODYNAMIC CALCULATORS
-    // =========================================================================
-    let currentLang = 'fa';
-    let animPaused = false;
-    let simTime = 0;
-    let dutyCyclePct = 7.5;
-    let userCfm = 1000;
-    let userPa = 30;
-
-    const i18n = {
-      fa: {
-        barTitle: 'پرتفولیوی جامع فنی، ممیزی ترمودینامیکی و شبیه‌ساز سه‌بعدی اختراعات مهندس فایق آزور',
-        btnWord: '<i class="fa-solid fa-file-word"></i> دانلود سند رسمی (Word .doc)',
-        btnTheme: '☀️ / 🌙 تم چاپ',
-        btnPrint: '🖨️ چاپ / ذخیره PDF',
-        badgePatsnap: 'گزارش اصالت PatSnap آمریکا: ۱۰۰٪ نوآورانه (۰ سند معارض X/Y)',
-        badgeTavanir: 'دارای تأییدیه علمی پژوهشکده توانیر (وزارت نیرو)',
-        heroTitle: 'پلتفرم جابه‌جایی مثبت نوسانی-پالسی سیالات مهندس فایق آزور: جایگزینی علمی فن‌های دوار (از ۱۸۸۲ میلادی)',
-        heroSub: 'گذار از «برش پره‌ای پرمصرف و تلاطم گردابی (Swirl)» به «جابه‌جایی مثبت پیستونی با راندمان حجمی ۹۰٪ (V_eff = 0.90 V_geom و P_elec > P_mech > P_fluid)»: کاهش اثبات‌شده مصرف برق به میزان ۸۴.۶٪ تا ۹۵.۰٪، حذف ۱۰۰ وات گرمای موتور از مسیر هوای خنک و عملکرد فروصوت (زیر ۲۵ دسی‌بل)',
-        kpi1Title: 'صرفه‌جویی واقعی و ممیزی‌شده برق', kpi1Sub: '۱۴.۹ تا ۵۴.۱ وات (در برابر ۱۸۰ تا ۵۰۰ وات سنتی)',
-        kpi2Title: 'راندمان کل الکترومکانیکی-سیالاتی', kpi2Sub: 'منطبق بر قانون ۱ و ۲ ترمودینامیک (P_elec > P_fluid)',
-        kpi3Title: 'اصالت مطلق ثبت جهانی', kpi3Sub: 'بررسی ۱۰۰ پتنت و ۵۰ مقاله در PatSnap',
-        kpi4Title: 'بهره‌وری ویژه (CFM / Watt)', kpi4Sub: 'در برابر ۷ تا ۱۰ CFM/W در کولرهای دوار',
-        cvBox1Title: '۱. فن دوار سنتی (از ۱۸۸۲ میلادی)', cvBox1Sub: '450W دائمی | فقط ۱۲–۱۵٪ راندمان مفید!', cvBox1Foot: '۶۰٪ اتلاف گردابی (Swirl) + ۱۰۰ وات گرمای موتور',
-        cvBox2Title: '۲. بال مکشی خودپمپاژ (پتنت ۱۱۳۵۹۹)', cvBox2Sub: '771 CFM با ۱۴.۹ وات | دوقلو: 2,718 CFM با ۴۶.۱ وات', cvBox2Launch: '⚡ فاز ۱: پرتاب پالسی + ذخیره پتانسیل mgΔh در آونگ', cvBox2Return: '🌍 فاز ۲: مدار خاموش ← بازگشت آونگ + پمپ مکانیکی آب',
-        cvBox3Title: '۳. گهواره‌ای منشوری (پتنت ۱۱۳۷۶۱)', cvBox3Sub: '3,303 CFM با ۲۵ وات (تهویه) / ۵۴.۱ وات (کولر)', cvBox3Foot: '🔄 مکش و دهش همزمان دوطرفه (η_total = 66.2%)',
-        cvOscTitle: '📊 اسیلوسکوپ زنده توان (PWM): مقایسه توان متوسط کنتور (P_elec > P_fluid) با مصرف دائمی موتور دوار سنتی',
-        fcvLeftTitle: 'الف) آنالوژی «تاب پارک» (نوسان‌گر آونگی با Q بالا)', fcvLeftSub: 'تزریق انرژی پالسی در ۷.۵٪ زمان | ۹۲.۵٪ حرکت با اینرسی و پتانسیل آونگ',
-        fcvPushActive: '⚡ لحظه اعمال پالس الکترومغناطیسی (تزریق کار سیکل)', fcvGravityFree: '🌍 مدار خاموش: تبادل انرژی پتانسیل و جنبشی در آونگ',
-        fcvRightTitle: 'ب) اثبات قانون اول ترمودینامیک در عبور هوا از پد مرطوب', fcvRightSub: 'کار خالص سیال: P_fluid = Q (m³/s) × ΔP (Pa) < P_elec',
-        fcvPadLabel: 'پد سلولزی مرطوب', fcvPistonLabel: 'پانل جابه‌جایی مثبت (η_vol = 90%)',
-        fcvCompareTitle: '📊 مقایسه کار فیزیکی سیال (P_fluid) با توان ورودی سامانه آزور (P_elec) و فن دوار سنتی:',
-        sec3dTitle: 'شبیه‌ساز تعاملی سه‌بعدی (WebGL 3D CAD): بررسی ۷ معماری و پیکربندی صنعتی پلتفرم آزور',
-        sec3dSub: 'با ماوس یا لمس صفحه، مدل سه‌بعدی را بچرخانید و نحوه عملکرد همزمان پانل نوسانی، لوورهای ورودی یک‌طرفه و دمپرهای مقعر خروجی را مشاهده کنید',
-        spec3dHeader: 'مشخصات معماری انتخاب‌شده',
-        secEmpiricalTitle: 'اثبات میدانی (داده‌های واقعی) و چالش جهانی ۱۰۰۰ CFM با باتری ۱۵ وات‌ساعت',
-        secEmpiricalSub: 'مقایسه قبض برق واقعی قبل و بعد از نصب + پاسخ علمی به منتقدان درباره پدیده واماندگی آیرودینامیکی (Stall)',
-        billTitle: 'قبض برق واقعی (قبل و بعد از نصب اختراع)',
-        challengeTitle: 'چالش ۱۰۰۰ CFM با باتری ۱۵ وات‌ساعت: چرا فن‌های BLDC شکست می‌خورند؟',
-        auditTitle: 'جدول رسمی ممیزی قوانین بقای جرم و ترمودینامیک (ویژه راستی‌آزمایی توسط سرمایه‌گذار و هوش مصنوعی)',
-        auditSub: 'تمامی ارقام این جدول بر پایه راندمان حجمی واقعی η_vol = 90% (V_eff = 0.90 V_geom) و قانون اول و دوم ترمودینامیک (P_elec > P_mech > P_fluid = Q × ΔP) در حالت پایدار چرخه کامل محاسبه شده‌اند',
-        sec1Title: 'آزمایشگاه انیمیشنی دوبعدی: مقایسه فن دوار (۱۸۸۲) با بال مکشی (۱۱۳۵۹۹) و گهواره‌ای (۱۱۳۷۶۱)',
-        sec1Sub: 'نمایش بصری حذف اتلاف گردابی (Swirl)، راندمان حجمی ۹۰٪، بازیابی انرژی پتانسیل در پمپ مکانیکی آب و مدولاسیون پهنای پالس (PWM)',
-        btnPause: '⏸️ توقف / ادامه انیمیشن‌ها',
-        calcHeader: 'شبیه‌ساز مقیاس‌های صنعتی',
-        calcSelectLbl: 'انتخاب پیکربندی:',
-        calcDutyLbl: 'چرخه کاری پالس (Duty Cycle):',
-        secSwingTitle: 'اثبات تصویری مبنای علمی: «نوسان‌گر آونگی (مثال تاب پارک)» و محاسبه کار واقعی سیال',
-        secSwingSub: 'چرا عبور دادن ۱۰۰۰ CFM هوا از پدهای سلولزی با افت فشار ۲۳ تا ۵۰ پاسکال از نظر قوانین فیزیک تنها به ۱۰.۸۵ تا ۲۳.۶ وات کار خالص سیال نیاز دارد، اما فن‌های سنتی ۳۰۰ تا ۴۵۰ وات برق می‌سوزانند؟',
-        fndCalcHeader: 'ماشین‌حساب قانون اول ترمودینامیک',
-        sec4Title: 'پاسخ علمی به چالش‌های مهندسان (بر پایه تحلیل ۱۱۵ کامنت مستند)',
-        atCol0: 'پارامتر مهندسی و معادله فیزیکی',
-        atCol1: '۱. بال مکشی تکی (۱۱۳۵۹۹)', atCol2: '۲. تست عملی نمونه (داکت 72×205 cm)', atCol3: '۳. گهواره‌ای — تهویه (۱۱۳۷۶۱)', atCol4: '۴. بال مکشی دوقلو (کولر ۳۵۰۰)', atCol5: '۵. گهواره‌ای — کولر (۱۱۳۷۶۱)',
-        atRow1: 'ابعاد محفظه و زاویه / کورس', atRow2: 'جرم و سینماتیک', atRow3: 'حجم هندسی (V_geom)', atRow4: 'حجم مؤثر (V_eff = 0.90 V_geom)', atRow5: 'فرکانس (f)', atRow6: 'دبی واقعی (Q)', atRow7: 'افت فشار (ΔP)', atRow8: '۱. توان خالص سیال (P_fluid)', atRow9: '۲. توان مکانیکی (P_mech)', atRow10: '۳. توان الکتریکی (P_elec > P_mech)', atRow11: 'راندمان کل (η_total)', atRow13: 'صرفه‌جویی اثبات‌شده برق'
-      },
-      en: {
-        barTitle: 'Executive Technical Portfolio, Thermodynamic Audit & 3D Simulator — Eng. Fayag Azure',
-        btnWord: '<i class="fa-solid fa-file-word"></i> Download Audited Word Report (.doc)',
-        btnTheme: '☀️ / 🌙 Print Theme',
-        btnPrint: '🖨️ Print / Save PDF',
-        badgePatsnap: 'PatSnap Global Novelty Audit: 100% Novel (0 X / 0 Y Citations)',
-        badgeTavanir: 'Endorsed by Tavanir Research Institute (Ministry of Energy)',
-        heroTitle: 'Pulsed-Oscillatory Positive Displacement Fluid Platform by Eng. Fayag Azure: Replacing the 1882 Rotary Fan',
-        heroSub: 'Transitioning from wasteful rotary blade shear & Swirl vortices to Positive Displacement Piston aerodynamics with 90% volumetric efficiency (V_eff = 0.90 V_geom and P_elec > P_mech > P_fluid): Verified 84.6%–95.0% electricity savings, zero motor heat in airstream, and <25 dB infrasonic silence',
-        kpi1Title: 'Verified Power Reduction', kpi1Sub: '14.9W to 54.1W (vs. 180W–500W rotary)',
-        kpi2Title: 'Total System Efficiency (η_total)', kpi2Sub: '1st & 2nd Law Compliant (P_elec > P_fluid)',
-        kpi3Title: 'Global Patent Novelty', kpi3Sub: '100 Patents & 50 Papers Audited on PatSnap',
-        kpi4Title: 'Specific Efficacy (CFM / Watt)', kpi4Sub: 'vs. 7–10 CFM/W in conventional rotary coolers',
-        cvBox1Title: '1. Old 1882 Rotary Fan Paradigm', cvBox1Sub: '450W Continuous | Only 12–15% Net Efficiency!', cvBox1Foot: '60% Swirl Vortex Loss + 100W Motor Heat in Air',
-        cvBox2Title: '2. Self-Pumping Suction Wing (#113599)', cvBox2Sub: '771 CFM @ 14.9W | Twin: 2,718 CFM @ 46.1W', cvBox2Launch: '⚡ Phase 1: Pulsed Launch + Stores mgΔh in Pendulum', cvBox2Return: '🌍 Phase 2: Circuit OFF → Pendulum Drives Water Pump',
-        cvBox3Title: '3. Bilateral Prismatic Cradle (#113761)', cvBox3Sub: '3,303 CFM @ 25.0W (Vent) / 54.1W (Cooler)', cvBox3Foot: '🔄 Simultaneous Suction & Discharge (η_total = 66.2%)',
-        cvOscTitle: '📊 Live PWM Power Oscilloscope: Time-Averaged Meter Input (P_elec > P_fluid) vs. 450W Rotary Motor',
-        fcvLeftTitle: 'A) The "Park Swing" High-Q Pendulum Resonator', fcvLeftSub: 'Pulsed Energy Injection (7.5% Time) | 92.5% Inertia & Gravity Exchange',
-        fcvPushActive: '⚡ Electromagnetic Pulse Active (Injecting Cycle Work)', fcvGravityFree: '🌍 Circuit OFF: Conservative Potential-Kinetic Exchange',
-        fcvRightTitle: 'B) 1st Law of Thermodynamics Proof Across Wet Pads', fcvRightSub: 'Pure Fluid Work: P_fluid = Q (m³/s) × ΔP (Pa) < P_elec',
-        fcvPadLabel: 'Wet Cellulose Pad', fcvPistonLabel: 'Positive Piston (η_vol = 90%)',
-        fcvCompareTitle: '📊 Pure Fluid Power (P_fluid) vs. Azure Electrical Input (P_elec) vs. Rotary Fan:',
-        sec3dTitle: 'Interactive 3D WebGL CAD Simulator: Exploring 7 Industrial Architectures of the Azure Platform',
-        sec3dSub: 'Drag the mouse or touch the screen to rotate the 3D model and observe the synchronous operation of the oscillating panel, one-way intake louvers, and concave exhaust dampers',
-        spec3dHeader: 'Selected Architecture Specs',
-        secEmpiricalTitle: 'Empirical Field Proof & Global 1000 CFM / 15Wh Battery Challenge',
-        secEmpiricalSub: 'Real electricity bill comparison + Scientific response to Aerodynamic Stall critics',
-        billTitle: 'Real Electricity Bill (Before & After Installation)',
-        challengeTitle: 'The 15Wh Battery Challenge: Why BLDC Fans Fail',
-        auditTitle: 'Official Mass & Thermodynamic Audit Table (For Investors & AI Verification)',
-        auditSub: 'All values based on actual volumetric efficiency η_vol = 90% (V_eff = 0.90 V_geom) and 1st/2nd Laws of Thermodynamics (P_elec > P_mech > P_fluid = Q × ΔP)',
-        sec1Title: '2D Animated Lab: 1882 Rotary Fan vs. Suction Wing (#113599) & Cradle (#113761)',
-        sec1Sub: 'Visualizing Swirl elimination, 90% volumetric efficiency, gravitational pump energy recovery, and PWM duty cycle',
-        btnPause: '⏸️ Pause / Resume Animations',
-        calcHeader: 'Industrial Scale Simulator',
-        calcSelectLbl: 'Select Configuration:',
-        calcDutyLbl: 'Pulse Duty Cycle:',
-        secSwingTitle: 'Visual Proof: "Park Swing" Analogy & Real Fluid Work Calculation',
-        secSwingSub: 'Why moving 1,000 CFM across 23–50 Pa pads requires only 10.85–23.6W of pure fluid work, while rotary fans burn 300–450W',
-        fndCalcHeader: '1st Law Thermodynamic Calculator',
-        sec4Title: 'Scientific Responses to Engineer Challenges (Based on 115 Audited Comments)',
-        atCol0: 'Engineering Parameter & Equation',
-        atCol1: '1. Single Suction Wing (113599)', atCol2: '2. Prototype Duct Test (72×205 cm)', atCol3: '3. Cradle — Ventilation (113761)', atCol4: '4. Twin Suction Wing (3500 Cooler)', atCol5: '5. Cradle — Cooler (113761)',
-        atRow1: 'Dimensions & Stroke', atRow2: 'Mass & Kinematics', atRow3: 'Geometric Volume (V_geom)', atRow4: 'Effective Volume (V_eff = 0.90 V_geom)', atRow5: 'Frequency (f)', atRow6: 'Actual Flow Rate (Q)', atRow7: 'Pressure Drop (ΔP)', atRow8: '1. Pure Fluid Power (P_fluid)', atRow9: '2. Mechanical Power (P_mech)', atRow10: '3. Electrical Power (P_elec > P_mech)', atRow11: 'Total Efficiency (η_total)', atRow13: 'Verified Electricity Savings'
-      },
-      tr: {
-        barTitle: 'Müh. Fayag Azure Akışkan Transferi — Termodinamik Denetim Raporu ve 3B Simülatör',
-        btnWord: '<i class="fa-solid fa-file-word"></i> Denetlenmiş Word Raporunu İndir (.doc)',
-        btnTheme: '☀️ / 🌙 Baskı Teması',
-        btnPrint: '🖨️ Yazdır / PDF Kaydet',
-        badgePatsnap: 'PatSnap Küresel Yenilik Denetimi: %100 Özgün (0 X / 0 Y Atıf)',
-        badgeTavanir: 'Tavanir Araştırma Enstitüsü (Enerji Bakanlığı) Onaylı',
-        heroTitle: 'Müh. Fayag Azure Darbeli-Salınımlı Pozitif Deplasman Platformu: 1882 Döner Fan Çağının Sonu',
-        heroSub: 'Verimsiz döner pervane ve Swirl girdap kayıplarından %90 hacimsel verimli (V_eff = 0.90 V_geom ve P_elec > P_mech > P_fluid) Pozitif Deplasmanlı Piston teknolojisine geçiş: Kanıtlanmış %84,6–%95,0 elektrik tasarrufu ve <25 dB infrasonik sessizlik',
-        kpi1Title: 'Kanıtlanmış Elektrik Tasarrufu', kpi1Sub: '180–500W yerine 14,9W ila 54,1W tüketim',
-        kpi2Title: 'Toplam Sistem Verimi (η_total)', kpi2Sub: '1. ve 2. Termodinamik Yasasına Tam Uygun',
-        kpi3Title: 'Küresel Patent Özgünlüğü', kpi3Sub: 'PatSnap ile 100 Patent & 50 Makale Denetimi',
-        kpi4Title: 'Özgül Verimlilik (CFM / Watt)', kpi4Sub: 'Geleneksel döner fanda sadece 7–10 CFM/W',
-        cvBox1Title: '1. Geleneksel 1882 Döner Fanı', cvBox1Sub: '450W Sürekli | Sadece %12–15 Net Verim!', cvBox1Foot: '%60 Girdap (Swirl) Kaybı + 100W Motor Isısı',
-        cvBox2Title: '2. Öz-Pompalı Emiş Kanadı (#113599)', cvBox2Sub: '771 CFM @ 14,9W | İkiz: 2.718 CFM @ 46,1W', cvBox2Launch: '⚡ Faz 1: Darbeli Fırlatma + Sarkaçta mgΔh Depolama', cvBox2Return: '🌍 Faz 2: Devre Kapalı → Sarkaç Su Pompasını Çalıştırır',
-        cvBox3Title: '3. Çift Yönlü Prizmatik Beşik (#113761)', cvBox3Sub: '3.303 CFM @ 25,0W (Havalandırma) / 54,1W (Soğutucu)', cvBox3Foot: '🔄 Eşzamanlı Çift Yönlü Deplasman (η_total = %66,2)',
-        cvOscTitle: '📊 Canlı PWM Güç Osiloskopu: Sayaç Ortalama Gücü (P_elec > P_fluid) vs. 450W Döner Motor',
-        fcvLeftTitle: 'A) «Parktaki Salıncak» Yüksek-Q Sarkaç Rezonatörü', fcvLeftSub: 'Zirvede Kısa Darbe (%7,5 Süre) | %92,5 Atalet ve Potansiyel Enerji Döngüsü',
-        fcvPushActive: '⚡ Elektromanyetik Darbe Aktif (Döngü İşi Enjeksiyonu)', fcvGravityFree: '🌍 Devre Kapalı: Korunumlu Potansiyel-Kinetik Enerji Dönüşümü',
-        fcvRightTitle: 'B) Islak Pedlerde 1. Termodinamik Yasası Kanıtı', fcvRightSub: 'Saf Akışkan İşi: P_fluid = Q (m³/sn) × ΔP (Pa) < P_elec',
-        fcvPadLabel: 'Islak Selülozik Ped', fcvPistonLabel: 'Pozitif Piston (η_vol = %90)',
-        fcvCompareTitle: '📊 Saf Akışkan Gücü (P_fluid) vs. Azure Elektrik Girişi (P_elec) vs. Döner Fan:',
-        sec3dTitle: 'Etkileşimli 3B WebGL CAD Simülatörü: Azure Platformunun 7 Endüstriyel Mimarisi',
-        sec3dSub: '3B modeli döndürmek için fareyi sürükleyin ve salınımlı panelin, tek yönlü giriş panjurlarının ve içbükey egzoz damperlerinin eşzamanlı çalışmasını izleyin',
-        spec3dHeader: 'Seçilen Mimari Özellikleri',
-        secEmpiricalTitle: 'Saha Kanıtı ve Küresel 1000 CFM / 15Wh Pil Meydan Okuması',
-        secEmpiricalSub: 'Gerçek elektrik faturası karşılaştırması + Aerodinamik Stall eleştirmenlerine bilimsel yanıt',
-        billTitle: 'Gerçek Elektrik Faturası (Kurulum Öncesi ve Sonrası)',
-        challengeTitle: '15Wh Pil Meydan Okuması: BLDC Fanlar Neden Başarısız Olur?',
-        auditTitle: 'Resmi Kütle ve Termodinamik Denetim Tablosu (Yatırımcılar ve YZ Doğrulaması İçin)',
-        auditSub: 'Tüm değerler gerçek hacimsel verim η_vol = %90 (V_eff = 0.90 V_geom) ve 1./2. Termodinamik Yasalarına (P_elec > P_mech > P_fluid = Q × ΔP) dayanmaktadır',
-        sec1Title: '2B Animasyonlu Laboratuvar: 1882 Döner Fan vs. Emiş Kanadı (#113599) & Beşik (#113761)',
-        sec1Sub: 'Swirl eliminasyonu, %90 hacimsel verim, yerçekimi pompa enerjisi geri kazanımı ve PWM görev döngüsünün görselleştirilmesi',
-        btnPause: '⏸️ Animasyonları Duraklat / Başlat',
-        calcHeader: 'Endüstriyel Ölçek Simülatörü',
-        calcSelectLbl: 'Konfigürasyon Seçin:',
-        calcDutyLbl: 'Darbe Görev Döngüsü:',
-        secSwingTitle: 'Görsel Kanıt: «Parktaki Salıncak» Analojisi ve Gerçek Akışkan İşi Hesabı',
-        secSwingSub: '23–50 Pa pedlerde 1.000 CFM hareket ettirmek neden sadece 10,85–23,6W saf akışkan işi gerektirirken, döner fanlar 300–450W tüketir',
-        fndCalcHeader: '1. Yasa Termodinamik Hesaplayıcı',
-        sec4Title: 'Mühendis Zorluklarına Bilimsel Yanıtlar (115 Denetlenmiş Yorum Bazında)',
-        atCol0: 'Mühendislik Parametresi ve Denklemi',
-        atCol1: '1. Tekli Emiş Kanadı (113599)', atCol2: '2. Prototip Kanal Testi (72×205 cm)', atCol3: '3. Beşik — Havalandırma (113761)', atCol4: '4. İkiz Emiş Kanadı (3500 Soğutucu)', atCol5: '5. Beşik — Soğutucu (113761)',
-        atRow1: 'Boyutlar ve Strok', atRow2: 'Kütle ve Kinematik', atRow3: 'Geometrik Hacim (V_geom)', atRow4: 'Etkin Hacim (V_eff = 0.90 V_geom)', atRow5: 'Frekans (f)', atRow6: 'Gerçek Debi (Q)', atRow7: 'Basınç Düşümü (ΔP)', atRow8: '1. Saf Akışkan Gücü (P_fluid)', atRow9: '2. Mekanik Güç (P_mech)', atRow10: '3. Elektrik Gücü (P_elec > P_mech)', atRow11: 'Toplam Verim (η_total)', atRow13: 'Kanıtlanmış Elektrik Tasarrufu'
-      }
-    };
-
-    function getCanvasFont(weight, sizePx) {
-      if (currentLang === 'fa') return `${weight} ${sizePx + 1.5}px 'B Nazanin', 'BNazanin', 'Vazirmatn', Tahoma, serif`;
-      if (currentLang === 'tr') return `${weight} ${sizePx}px 'Plus Jakarta Sans', 'Segoe UI', sans-serif`;
-      return `${weight} ${sizePx}px 'Inter', 'Plus Jakarta Sans', sans-serif`;
-    }
-
-    function setLanguage(lang) {
-      currentLang = lang;
-      const rootHtml = document.getElementById('root-html');
-      const dict = i18n[lang];
-
-      document.body.classList.remove('fa-mode', 'en-mode', 'tr-mode');
-      if (lang === 'fa') { rootHtml.setAttribute('lang', 'fa'); rootHtml.setAttribute('dir', 'rtl'); document.body.classList.add('fa-mode'); }
-      else if (lang === 'tr') { rootHtml.setAttribute('lang', 'tr'); rootHtml.setAttribute('dir', 'ltr'); document.body.classList.add('tr-mode'); }
-      else { rootHtml.setAttribute('lang', 'en'); rootHtml.setAttribute('dir', 'ltr'); document.body.classList.add('en-mode'); }
-
-      ['fa', 'en', 'tr'].forEach(l => {
-        const btn = document.getElementById('lang-' + l);
-        if (btn) {
-          btn.className = (l === lang) ? 'px-3 py-1 rounded font-bold bg-sky-600 text-white transition' : 'px-3 py-1 rounded font-bold text-slate-300 hover:text-white transition';
-        }
-      });
-
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (dict && dict[key]) el.innerHTML = dict[key];
-      });
-
-      updateCalculator();
-      updateFluidProof();
-    }
-
-    const scaleData = {
-      wingSingle:   { cfm: 771,   m3s: 0.364, dP: 23, fluidW: 8.36,  oldW: 180,  peakW: 90,   elecW: 14.9, eff: 56.1 },
-      protoTest:    { cfm: 2346,  m3s: 1.107, dP: 10, fluidW: 11.07, oldW: 350,  peakW: 140,  elecW: 20.0, eff: 55.3 },
-      wingTwin:     { cfm: 2718,  m3s: 1.283, dP: 23, fluidW: 29.50, oldW: 450,  peakW: 280,  elecW: 46.1, eff: 64.0 },
-      cradleCooler: { cfm: 3303,  m3s: 1.559, dP: 23, fluidW: 35.86, oldW: 450,  peakW: 343,  elecW: 54.1, eff: 66.2 },
-      cradleVent:   { cfm: 3303,  m3s: 1.559, dP: 10, fluidW: 15.59, oldW: 500,  peakW: 185,  elecW: 25.0, eff: 62.4 },
-      ind10k:       { cfm: 10000, m3s: 4.719, dP: 10, fluidW: 47.19, oldW: 1500, peakW: 520,  elecW: 75.0, eff: 62.9 },
-      ind26k:       { cfm: 26400, m3s: 12.46, dP: 12, fluidW: 149.5, oldW: 4500, peakW: 1480, elecW: 235.0, eff: 63.6 }
-    };
-
-    function updateCalculator() {
-      dutyCyclePct = parseFloat(document.getElementById('dutySlider').value);
-      const scaleKey = document.getElementById('scaleSelect').value;
-      const item = scaleData[scaleKey];
-
-      const pulseSec = ((dutyCyclePct / 100) * 2.0).toFixed(2);
-      document.getElementById('dutyValText').innerText = `${dutyCyclePct.toFixed(1)}% (${pulseSec}s / 2.0s)`;
-
-      const dynamicPeakW = ((item.elecW - 2.0) / (dutyCyclePct / 100)).toFixed(1);
-      const savedPct = ((1 - item.elecW / item.oldW) * 100).toFixed(1);
-      const timesLess = (item.oldW / item.elecW).toFixed(1);
-
-      document.getElementById('outAirflow').innerText = `${item.cfm.toLocaleString()} CFM (${item.m3s.toFixed(2)} m³/s)`;
-      document.getElementById('outFluidPower').innerText = `${item.fluidW.toFixed(2)} W`;
-      document.getElementById('outPeakPower').innerText = `${dynamicPeakW} W`;
-      document.getElementById('outAvgPower').innerText = `${item.elecW.toFixed(1)} W (η=${item.eff}%)`;
-      document.getElementById('outOldPower').innerText = `${item.oldW.toLocaleString()} W`;
-      document.getElementById('outSaved').innerText = `${savedPct}% (${timesLess}x Less)`;
-    }
-
-    function setFluidPreset(cfm, pa) {
-      document.getElementById('fndCfmSlider').value = cfm;
-      document.getElementById('fndPaSlider').value = pa;
-      updateFluidProof();
-    }
-
-    function updateFluidProof() {
-      userCfm = parseFloat(document.getElementById('fndCfmSlider').value);
-      userPa = parseFloat(document.getElementById('fndPaSlider').value);
-
-      const m3s = userCfm * 0.000471947;
-      const pureFluidWatts = m3s * userPa;
-      const azureMechW = pureFluidWatts * 1.08;
-      const azureElecWatts = (azureMechW / 0.75) + 2.0;
-      const rotaryWatts = (pureFluidWatts / 0.11) + (userCfm * 0.045);
-
-      document.getElementById('fndCfmVal').innerText = `${userCfm.toLocaleString()} CFM (${m3s.toFixed(3)} m³/s)`;
-      document.getElementById('fndPaVal').innerText = `${userPa} Pa`;
-      document.getElementById('fndOutM3s').innerText = `Q = ${m3s.toFixed(3)} m³/s`;
-      document.getElementById('fndOutWatts').innerText = `${pureFluidWatts.toFixed(2)} Watts`;
-      document.getElementById('fndOutAzureW').innerText = `${azureElecWatts.toFixed(1)} W`;
-      document.getElementById('fndOutRotaryW').innerText = `${rotaryWatts.toFixed(0)} W`;
-    }
-
-    function toggleAnim() { animPaused = !animPaused; }
-
-    // =========================================================================
-    // 3. 2D CANVASES RENDERING LOOP
-    // =========================================================================
-    const canvas = document.getElementById('physicsCanvas');
-    const ctx = canvas.getContext('2d');
-    const fndCanvas = document.getElementById('foundationCanvas');
-    const fctx = fndCanvas.getContext('2d');
-
-    function drawVecArrow(context, x1, y1, x2, y2, color, w = 2) {
-      const head = 7, ang = Math.atan2(y2 - y1, x2 - x1);
-      context.save(); context.strokeStyle = color; context.fillStyle = color; context.lineWidth = w;
-      context.beginPath(); context.moveTo(x1, y1); context.lineTo(x2, y2); context.stroke();
-      context.beginPath(); context.moveTo(x2, y2);
-      context.lineTo(x2 - head * Math.cos(ang - Math.PI / 6), y2 - head * Math.sin(ang - Math.PI / 6));
-      context.lineTo(x2 - head * Math.cos(ang + Math.PI / 6), y2 - head * Math.sin(ang + Math.PI / 6));
-      context.closePath(); context.fill(); context.restore();
-    }
-
-    function renderFoundationCanvas() {
-      const d = i18n[currentLang];
-      fctx.clearRect(0, 0, fndCanvas.width, fndCanvas.height);
-
-      // Left Box: High-Q Pendulum / Park Swing Analogy
-      fctx.fillStyle = '#071426'; fctx.strokeStyle = '#38bdf8'; fctx.lineWidth = 1.5;
-      fctx.beginPath(); fctx.roundRect(10, 10, 362, 265, 12); fctx.fill(); fctx.stroke();
-      fctx.textAlign = 'center'; fctx.fillStyle = '#7dd3fc'; fctx.font = getCanvasFont('bold', 12);
-      fctx.fillText(d.fcvLeftTitle, 191, 32);
-      fctx.fillStyle = '#94a3b8'; fctx.font = getCanvasFont('normal', 9.5);
-      fctx.fillText(d.fcvLeftSub, 191, 49);
-
-      const pivX = 191, pivY = 74, ropeL = 122;
-      const swingPhase = (simTime * 0.65) % 1;
-      const thetaMax = 0.58;
-      const theta = -thetaMax * Math.cos(swingPhase * Math.PI * 2);
-      const isApexPush = (swingPhase < 0.085);
-
-      fctx.save(); fctx.strokeStyle = 'rgba(148, 163, 184, 0.3)'; fctx.setLineDash([4, 4]);
-      fctx.lineWidth = 1.5; fctx.beginPath(); fctx.arc(pivX, pivY, ropeL, Math.PI / 2 - thetaMax, Math.PI / 2 + thetaMax);
-      fctx.stroke(); fctx.restore();
-
-      fctx.fillStyle = '#f59e0b'; fctx.fillRect(pivX - 35, pivY - 5, 70, 6);
-      fctx.beginPath(); fctx.arc(pivX, pivY, 5, 0, Math.PI * 2); fctx.fill();
-
-      const bobX = pivX + Math.sin(theta) * ropeL;
-      const bobY = pivY + Math.cos(theta) * ropeL;
-
-      fctx.strokeStyle = isApexPush ? '#f43f5e' : '#38bdf8'; fctx.lineWidth = 4;
-      fctx.beginPath(); fctx.moveTo(pivX, pivY); fctx.lineTo(bobX, bobY); fctx.stroke();
-
-      fctx.fillStyle = isApexPush ? '#f43f5e' : '#10b981';
-      fctx.beginPath(); fctx.arc(bobX, bobY, 13, 0, Math.PI * 2); fctx.fill();
-
-      const leftApexX = pivX - Math.sin(thetaMax) * ropeL;
-      const leftApexY = pivY + Math.cos(thetaMax) * ropeL;
-      fctx.fillStyle = isApexPush ? '#e11d48' : '#334155';
-      fctx.fillRect(leftApexX - 28, leftApexY - 8, 16, 16);
-
-      if (isApexPush) {
-        drawVecArrow(fctx, leftApexX - 10, leftApexY, bobX + 18, bobY + 6, '#f43f5e', 3);
-        fctx.fillStyle = '#fda4af'; fctx.font = 'bold 9.5px Inter';
-        fctx.fillText('PULSE ON (7.5%)', leftApexX + 20, leftApexY - 16);
-      } else {
-        drawVecArrow(fctx, bobX, bobY + 14, bobX, bobY + 38, '#10b981', 2);
-        fctx.fillStyle = '#6ee7b7'; fctx.font = 'bold 9px Inter';
-        fctx.fillText('mgΔh Exchange', bobX + 28, bobY + 30);
-      }
-
-      const normHeight = (1 - Math.cos(theta)) / (1 - Math.cos(thetaMax));
-      const normKE = 1 - normHeight;
-      fctx.fillStyle = '#1e293b'; fctx.fillRect(35, 222, 140, 9);
-      fctx.fillStyle = '#38bdf8'; fctx.fillRect(35, 222, 140 * normHeight, 9);
-      fctx.fillStyle = '#1e293b'; fctx.fillRect(205, 222, 140, 9);
-      fctx.fillStyle = '#10b981'; fctx.fillRect(205, 222, 140 * normKE, 9);
-
-      fctx.font = 'bold 8.5px Inter'; fctx.fillStyle = '#7dd3fc';
-      fctx.fillText('Potential Energy (mgh)', 105, 217);
-      fctx.fillStyle = '#6ee7b7';
-      fctx.fillText('Kinetic Energy (½Iω²)', 275, 217);
-
-      fctx.fillStyle = isApexPush ? '#fda4af' : '#a7f3d0'; fctx.font = getCanvasFont('bold', 10.5);
-      fctx.fillText(isApexPush ? d.fcvPushActive : d.fcvGravityFree, 191, 255);
-
-      // Right Box: 1st Law Conservation of Energy Proof
-      fctx.fillStyle = '#071b24'; fctx.strokeStyle = '#10b981'; fctx.lineWidth = 1.5;
-      fctx.beginPath(); fctx.roundRect(384, 10, 366, 265, 12); fctx.fill(); fctx.stroke();
-      fctx.fillStyle = '#6ee7b7'; fctx.font = getCanvasFont('bold', 12);
-      fctx.fillText(d.fcvRightTitle, 567, 32);
-      fctx.fillStyle = '#94a3b8'; fctx.font = getCanvasFont('normal', 9.5);
-      fctx.fillText(d.fcvRightSub, 567, 49);
-
-      const dx = 415, dy = 72, dw = 304, dh = 115;
-      fctx.fillStyle = '#0f172a'; fctx.strokeStyle = '#64748b'; fctx.lineWidth = 2;
-      fctx.fillRect(dx, dy, dw, dh); fctx.strokeRect(dx, dy, dw, dh);
-
-      const padX = dx + 195, padW = 42;
-      fctx.fillStyle = 'rgba(14, 165, 233, 0.32)'; fctx.strokeStyle = '#38bdf8';
-      fctx.fillRect(padX, dy + 4, padW, dh - 8); fctx.strokeRect(padX, dy + 4, padW, dh - 8);
-
-      const strokeProg = 0.5 + 0.45 * Math.sin(simTime * 2.2);
-      const pistX = dx + 22 + strokeProg * 135;
-      fctx.fillStyle = '#f59e0b'; fctx.fillRect(pistX, dy + 6, 12, dh - 12);
-
-      for (let row = 0; row < 4; row++) {
-        const ay = dy + 22 + row * 24;
-        const shift = ((simTime * 55 + row * 20) % 95);
-        drawVecArrow(fctx, padX - 45 + shift * 0.4, ay, padX + padW + 15 + shift * 0.45, ay, '#38bdf8', 2);
-      }
-
-      fctx.fillStyle = '#bae6fd'; fctx.font = getCanvasFont('bold', 9.5);
-      fctx.fillText(`${d.fcvPadLabel} (ΔP = ${userPa} Pa)`, padX + 21, dy - 6);
-      fctx.fillStyle = '#fde68a';
-      fctx.fillText(d.fcvPistonLabel, dx + 95, dy + dh + 16);
-
-      const m3s = userCfm * 0.000471947;
-      const pureW = m3s * userPa;
-      const azureElecW = ((pureW * 1.08) / 0.75) + 2.0;
-
-      fctx.fillStyle = '#020617'; fctx.strokeStyle = '#059669';
-      fctx.beginPath(); fctx.roundRect(402, 212, 330, 50, 8); fctx.fill(); fctx.stroke();
-
-      fctx.fillStyle = '#ffffff'; fctx.font = 'bold 10.5px Inter, monospace';
-      fctx.fillText(`P_fluid = ${m3s.toFixed(3)} m³/s × ${userPa} Pa = ${pureW.toFixed(2)} W`, 567, 230);
-      fctx.fillStyle = '#34d399'; fctx.font = 'bold 11.5px Inter, monospace';
-      fctx.fillText(`P_elec = ${azureElecW.toFixed(1)} W > P_fluid (${pureW.toFixed(1)} W) ✅`, 567, 250);
-
-      // Bottom Comparison Bars
-      fctx.fillStyle = '#040914'; fctx.strokeStyle = '#334155';
-      fctx.beginPath(); fctx.roundRect(10, 286, 740, 118, 12); fctx.fill(); fctx.stroke();
-
-      fctx.fillStyle = '#fbbf24'; fctx.font = getCanvasFont('bold', 11);
-      fctx.textAlign = 'center';
-      fctx.fillText(d.fcvCompareTitle, 380, 307);
-
-      const rotaryW = (pureW / 0.11) + (userCfm * 0.045);
-      const maxBarW = 430;
-
-      fctx.textAlign = 'left'; fctx.font = 'bold 10px Inter';
-      fctx.fillStyle = '#6ee7b7'; fctx.fillText('1. Pure Fluid Work (Q×ΔP):', 25, 333);
-      const b1W = Math.max(18, (pureW / rotaryW) * maxBarW);
-      fctx.fillStyle = '#10b981'; fctx.fillRect(205, 322, b1W, 14);
-      fctx.fillText(`${pureW.toFixed(1)} W (Pure Thermodynamic Work)`, 212 + b1W, 333);
-
-      fctx.fillStyle = '#7dd3fc'; fctx.fillText('2. Azure Input (P_elec):', 25, 360);
-      const b2W = Math.max(26, (azureElecW / rotaryW) * maxBarW);
-      fctx.fillStyle = '#0284c7'; fctx.fillRect(205, 349, b2W, 14);
-      fctx.fillText(`${azureElecW.toFixed(1)} W (P_elec > P_fluid, η ≈ 64% ✅)`, 212 + b2W, 360);
-
-      fctx.fillStyle = '#fda4af'; fctx.fillText('3. Old 1882 Rotary Fan:', 25, 387);
-      fctx.fillStyle = '#e11d48'; fctx.fillRect(205, 376, maxBarW, 14);
-      fctx.fillText(`${rotaryW.toFixed(0)} W (88% Wasted in Swirl & Heat!)`, 212 + maxBarW, 387);
-    }
-
-    const clock3D = new THREE.Clock();
-
-    function renderLab() {
-      const dt = Math.min(clock3D.getDelta(), 0.05);
-      if (!animPaused) {
-        simTime += 0.03;
-        step3DSimulator(dt);
-      }
-
-      const d = i18n[currentLang];
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      const boxes = [
-        { x: 10,  w: 276, stroke: '#f43f5e', bg: '#091326' },
-        { x: 298, w: 284, stroke: '#0ea5e9', bg: '#08172e' },
-        { x: 594, w: 276, stroke: '#10b981', bg: '#071b24' }
-      ];
-      boxes.forEach(b => {
-        ctx.fillStyle = b.bg; ctx.strokeStyle = b.stroke; ctx.lineWidth = 1.6;
-        ctx.beginPath(); ctx.roundRect(b.x, 10, b.w, 275, 12); ctx.fill(); ctx.stroke();
-      });
-
-      // CHAMBER 1: 1882 ROTARY FAN
-      ctx.textAlign = 'center'; ctx.fillStyle = '#fda4af'; ctx.font = getCanvasFont('bold', 11.5);
-      ctx.fillText(d.cvBox1Title, 148, 31);
-      ctx.fillStyle = '#fb7185'; ctx.font = getCanvasFont('bold', 10);
-      ctx.fillText(d.cvBox1Sub, 148, 48);
-
-      const fcx = 102, fcy = 148;
-      const heatR = 35 + 5 * Math.sin(simTime * 4);
-      const gHeat = ctx.createRadialGradient(fcx, fcy, 6, fcx, fcy, heatR);
-      gHeat.addColorStop(0, 'rgba(244, 63, 94, 0.85)');
-      gHeat.addColorStop(1, 'rgba(244, 63, 94, 0)');
-      ctx.fillStyle = gHeat; ctx.beginPath(); ctx.arc(fcx, fcy, heatR, 0, Math.PI * 2); ctx.fill();
-
-      ctx.save(); ctx.translate(fcx, fcy); ctx.rotate(simTime * 5.5);
-      for (let i = 0; i < 4; i++) {
-        ctx.rotate(Math.PI / 2); ctx.fillStyle = '#94a3b8';
-        ctx.beginPath(); ctx.ellipse(0, -27, 8, 23, 0.25, 0, Math.PI * 2); ctx.fill();
-      }
-      ctx.restore();
-
-      ctx.fillStyle = '#be123c'; ctx.beginPath(); ctx.arc(fcx, fcy, 14, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = '#ffffff'; ctx.font = 'bold 8px Inter'; ctx.fillText('+100W', fcx, fcy + 3);
-
-      for (let v = 0; v < 3; v++) {
-        const vx = 168 + ((simTime * 38 + v * 30) % 85);
-        const vy = 98 + v * 46 + 7 * Math.sin(simTime * 3 + v);
-        ctx.strokeStyle = 'rgba(251, 113, 133, 0.78)'; ctx.lineWidth = 1.6;
-        ctx.beginPath(); ctx.arc(vx, vy, 10, simTime * 4, simTime * 4 + Math.PI * 1.5); ctx.stroke();
-      }
-
-      ctx.fillStyle = '#fecdd3'; ctx.font = getCanvasFont('bold', 9.5);
-      ctx.fillText(d.cvBox1Foot, 148, 240);
-      ctx.fillStyle = '#e11d48'; ctx.fillRect(26, 252, 145, 10);
-      ctx.fillStyle = '#f59e0b'; ctx.fillRect(171, 252, 62, 10);
-      ctx.fillStyle = '#10b981'; ctx.fillRect(233, 252, 36, 10);
-      ctx.fillStyle = '#94a3b8'; ctx.font = '8.5px Inter';
-      ctx.fillText('60% Swirl | 25% Heat | 15% Air', 148, 274);
-
-      // CHAMBER 2: PATENT 113599 SUCTION WING (AUDITED)
-      ctx.fillStyle = '#7dd3fc'; ctx.font = getCanvasFont('bold', 11.5);
-      ctx.fillText(d.cvBox2Title, 440, 31);
-      ctx.fillStyle = '#38bdf8'; ctx.font = getCanvasFont('bold', 10);
-      ctx.fillText(d.cvBox2Sub, 440, 48);
-
-      const cyc = (simTime * 0.72) % 1;
-      const isLaunch = cyc < 0.27;
-      let wDeg = 0, sDeg = 0;
-      if (isLaunch) {
-        const p = cyc / 0.27;
-        wDeg = 20.5 * Math.sin(p * Math.PI * 0.5);
-        sDeg = wDeg;
-      } else {
-        const p = (cyc - 0.27) / 0.73;
-        wDeg = 20.5 * (1 - p);
-        sDeg = Math.max(0, 20.5 * (1 - p * 2.5));
-      }
-
-      ctx.fillStyle = '#0f172a'; ctx.strokeStyle = '#64748b';
-      ctx.fillRect(322, 82, 76, 122); ctx.strokeRect(322, 82, 76, 122);
-      ctx.fillStyle = 'rgba(14, 165, 233, 0.35)'; ctx.fillRect(328, 90, 24, 106);
-
-      ctx.fillStyle = '#0284c7'; ctx.fillRect(322, 62, 50, 16);
-      ctx.fillStyle = '#10b981'; ctx.fillRect(376, 62, 22, 16);
-
-      const hx = 398, hy = 82, wLen = 122;
-      const sRad = (sDeg * Math.PI) / 180;
-      const wRad = (wDeg * Math.PI) / 180;
-
-      ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 3;
-      ctx.beginPath(); ctx.moveTo(hx, hy);
-      ctx.lineTo(hx + Math.sin(sRad) * (wLen - 6), hy + Math.cos(sRad) * (wLen - 6)); ctx.stroke();
-
-      const wx = hx + Math.sin(wRad) * wLen;
-      const wy = hy + Math.cos(wRad) * wLen;
-      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 4.5;
-      ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(wx, wy); ctx.stroke();
-
-      ctx.fillStyle = isLaunch ? '#f43f5e' : '#475569';
-      ctx.fillRect(392, 198, 14, 10);
-      if (isLaunch) {
-        drawVecArrow(ctx, 410, 202, wx - 4, wy, '#f43f5e', 2.2);
-        for (let a = 0; a < 3; a++) drawVecArrow(ctx, 435 + a * 16, 115 + a * 24, 495 + a * 18, 115 + a * 24, '#38bdf8', 2.5);
-      } else {
-        drawVecArrow(ctx, 362, 198, 362, 80, '#10b981', 2);
-        ctx.fillStyle = '#34d399'; ctx.font = 'bold 8.5px Inter';
-        ctx.fillText('0.82W Pump ↑', 362, 144);
-      }
-
-      ctx.fillStyle = isLaunch ? '#fda4af' : '#6ee7b7'; ctx.font = getCanvasFont('bold', 9.2);
-      ctx.fillText(isLaunch ? d.cvBox2Launch : d.cvBox2Return, 440, 240);
-      ctx.fillStyle = '#10b981'; ctx.fillRect(314, 252, 205, 10);
-      ctx.fillStyle = '#475569'; ctx.fillRect(519, 252, 47, 10);
-      ctx.fillStyle = '#94a3b8'; ctx.font = '8.5px Inter';
-      ctx.fillText('η_vol = 90% | P_fluid = 8.36W | P_elec = 14.9W', 440, 274);
-
-      // CHAMBER 3: PATENT 113761 PRISMATIC CRADLE
-      ctx.fillStyle = '#6ee7b7'; ctx.font = getCanvasFont('bold', 11.5);
-      ctx.fillText(d.cvBox3Title, 732, 31);
-      ctx.fillStyle = '#34d399'; ctx.font = getCanvasFont('bold', 10);
-      ctx.fillText(d.cvBox3Sub, 732, 48);
-
-      const px = 732, py = 72;
-      ctx.strokeStyle = '#64748b'; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px - 86, 200); ctx.lineTo(px + 86, 200); ctx.closePath(); ctx.stroke();
-
-      const swRad = 0.42 * Math.sin(simTime * 1.8);
-      const swVel = Math.cos(simTime * 1.8);
-      const tx = px + Math.sin(swRad) * 122;
-      const ty = py + Math.cos(swRad) * 122;
-
-      ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 4.5;
-      ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(tx, ty); ctx.stroke();
-
-      if (swVel >= 0) {
-        drawVecArrow(ctx, px - 80, 134, px - 25, 134, '#38bdf8', 2.2);
-        drawVecArrow(ctx, px + 28, 148, px + 72, 186, '#10b981', 2.2);
-      } else {
-        drawVecArrow(ctx, px + 80, 134, px + 25, 134, '#38bdf8', 2.2);
-        drawVecArrow(ctx, px - 28, 148, px - 72, 186, '#10b981', 2.2);
-      }
-
-      ctx.fillStyle = '#f59e0b';
-      ctx.beginPath(); ctx.moveTo(px, 200);
-      ctx.lineTo(px + (swVel >= 0 ? -15 : 15), 220);
-      ctx.lineTo(px + (swVel >= 0 ? 6 : -6), 220);
-      ctx.closePath(); ctx.fill();
-
-      ctx.fillStyle = '#a7f3d0'; ctx.font = getCanvasFont('bold', 9.5);
-      ctx.fillText(d.cvBox3Foot, 732, 240);
-      ctx.fillStyle = '#10b981'; ctx.fillRect(610, 252, 205, 10);
-      ctx.fillStyle = '#475569'; ctx.fillRect(815, 252, 39, 10);
-      ctx.fillStyle = '#94a3b8'; ctx.font = '8.5px Inter';
-      ctx.fillText('P_fluid = 35.9W | P_mech = 38.7W | P_elec = 54.1W', 732, 274);
-
-      // BOTTOM OSCILLOSCOPE
-      ctx.fillStyle = '#040914'; ctx.strokeStyle = '#334155';
-      ctx.beginPath(); ctx.roundRect(10, 296, 860, 124, 12); ctx.fill(); ctx.stroke();
-
-      ctx.fillStyle = '#38bdf8'; ctx.font = getCanvasFont('bold', 11); ctx.textAlign = 'center';
-      ctx.fillText(d.cvOscTitle, 440, 316);
-
-      const ox = 65, oy = 402, ow = 785, oh = 68;
-      ctx.strokeStyle = '#475569'; ctx.lineWidth = 1.2;
-      ctx.beginPath(); ctx.moveTo(ox, oy - oh); ctx.lineTo(ox, oy); ctx.lineTo(ox + ow, oy); ctx.stroke();
-
-      ctx.strokeStyle = '#f43f5e'; ctx.setLineDash([5, 3]); ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.moveTo(ox, oy - oh + 6); ctx.lineTo(ox + ow, oy - oh + 6); ctx.stroke();
-      ctx.setLineDash([]);
-      ctx.textAlign = 'left'; ctx.fillStyle = '#fda4af'; ctx.font = 'bold 8.5px Inter';
-      ctx.fillText('450W Continuous Rotary Motor (100% ON)', ox + 10, oy - oh + 17);
-
-      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2.2; ctx.beginPath();
-      const periodPx = 155;
-      const dFrac = dutyCyclePct / 100;
-      const shiftPx = (simTime * 45) % periodPx;
-
-      for (let x = 0; x <= ow; x++) {
-        const ph = ((x + shiftPx) % periodPx) / periodPx;
-        const pyVal = (ph < dFrac) ? (oy - oh + 26) : oy;
-        if (x === 0) ctx.moveTo(ox + x, pyVal);
-        else ctx.lineTo(ox + x, pyVal);
-      }
-      ctx.stroke();
-
-      const rmsY = oy - 14;
-      ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2.5;
-      ctx.beginPath(); ctx.moveTo(ox, rmsY); ctx.lineTo(ox + ow, rmsY); ctx.stroke();
-
-      ctx.fillStyle = '#6ee7b7'; ctx.font = 'bold 9.5px Inter';
-      ctx.fillText(`True Meter RMS Average (P_elec = 14.9W to 54.1W > P_fluid ✅ | 85%–95% Verified Savings)`, ox + 210, rmsY - 5);
-
-      renderFoundationCanvas();
-      requestAnimationFrame(renderLab);
-    }
-
-    // =========================================================================
-    // 4. DIRECT WORD (.DOC) EXPORT
-    // =========================================================================
-    function exportVerifiedWordDoc() {
-      const mainClone = document.querySelector('.infographic-canvas').cloneNode(true);
-      const sim3dSection = mainClone.querySelector('section.no-print');
-      if (sim3dSection) sim3dSection.remove();
-      
-      const canvases = mainClone.querySelectorAll('canvas');
-      canvases.forEach(c => {
-        const wrapper = c.closest('.canvas-wrap') || c.closest('.lg\\:col-span-8') || c.closest('.lg\\:col-span-7') || c.closest('.lg\\:col-span-4');
-        if (wrapper) wrapper.remove();
-        else c.remove();
-      });
-
-      const controls = mainClone.querySelectorAll('.controls-panel, select, input[type="range"], .slider-group, .btn-group');
-      controls.forEach(c => c.remove());
-
-      const docHtml = `
-        <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40' dir='rtl' lang='fa'>
-        <head><meta charset='utf-8'><title>Fayag Azure Verified Technical Report</title>
-        <style>
-          body { font-family: 'B Nazanin', Tahoma, serif; font-size: 13pt; line-height: 1.6; direction: rtl; text-align: right; }
-          h1, h2, h3 { color: #0369a1; }
-          table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 10pt; }
-          th, td { border: 1px solid #334155; padding: 6px 8px; text-align: center; }
-          th { background-color: #e0f2fe; font-weight: bold; }
-          .badge-pass, .cell-hl { color: #059669; font-weight: bold; }
-          .math-box, .formula-box { background: #f8fafc; border-left: 4px solid #10b981; padding: 10px; font-family: Consolas, monospace; direction: ltr; text-align: left; }
-          .pro-card { border: 1px solid #cbd5e1; padding: 15px; margin-bottom: 15px; border-radius: 8px; }
-        </style></head>
-        <body>
-          ${mainClone.innerHTML}
-        </body></html>
-      `;
-      const blob = new Blob(['\ufeff', docHtml], { type: 'application/msword' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'Fayag_Azure_Thermodynamic_Audited_Report.doc';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    }
-
-    window.onload = function() {
-      init3DSimulator();
-      setLanguage('fa');
-      updateCalculator();
-      updateFluidProof();
-      renderLab();
-    };
-  </script>
 </body>
 </html>
